@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "manager/api/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "rewrites": [
+    { "source": "/manager/api/(.*)", "destination": "/manager/api/$1" },
+    { "source": "/manager", "destination": "/manager/index.html" },
+    { "source": "/suivi", "destination": "/suivi/index.html" },
+    { "source": "/dossier", "destination": "/dossier/index.html" }
+  ]
+}

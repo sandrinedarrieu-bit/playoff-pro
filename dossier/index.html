@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayOff / TerrainLink — Dossier de soutenance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,'Times New Roman',serif;background:#f5f4f0;color:#1a1a1a;font-size:13px;line-height:1.7}
+
+/* Boutons hors impression */
+.no-print{position:fixed;top:16px;right:16px;display:flex;flex-direction:column;gap:8px;z-index:999}
+.btn-action{padding:8px 14px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
+.btn-print{background:#1B2A4A;color:#fff}
+.btn-print:hover{background:#142036}
+.btn-toc{background:#fff;color:#1B2A4A;border:1px solid #1B2A4A}
+
+/* Page wrapper */
+.page{max-width:900px;margin:0 auto;background:#fff;box-shadow:0 0 40px rgba(0,0,0,0.08)}
+
+/* Page de couverture */
+.cover{background:#1B2A4A;color:#fff;padding:80px 60px;min-height:340px;display:flex;flex-direction:column;justify-content:center}
+.cover-tag{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:20px}
+.cover h1{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:8px}
+.cover h1 span{color:#E8511A}
+.cover-sub{font-size:16px;opacity:0.8;margin-bottom:32px;font-style:italic}
+.cover-meta{border-top:1px solid rgba(255,255,255,0.2);padding-top:20px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;opacity:0.7;line-height:2}
+.cover-bloc{background:rgba(255,255,255,0.1);border-left:3px solid #E8511A;padding:14px 18px;margin-top:24px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;border-radius:0 6px 6px 0}
+
+/* Table des matières */
+.toc{padding:40px 60px;border-bottom:1px solid #eee}
+.toc h2{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:14px;font-weight:700;color:#1B2A4A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:20px}
+.toc-bloc{margin-bottom:16px}
+.toc-bloc-title{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:11px;font-weight:700;color:#E8511A;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+.toc-item{display:flex;align-items:baseline;gap:6px;padding:4px 0;border-bottom:1px dotted #ddd;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px}
+.toc-item a{color:#1B2A4A;text-decoration:none;flex:1}
+.toc-item a:hover{color:#E8511A}
+.toc-item .toc-num{font-weight:700;color:#1B2A4A;min-width:40px}
+.toc-item .toc-statut{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.ts-fait{background:#d4edda;color:#155724}
+.ts-cours{background:#fff3cd;color:#856404}
+.ts-todo{background:#f8d7da;color:#721c24}
+
+/* En-tête de question */
+.question-section{padding:0 60px 60px}
+.q-header{background:#1B2A4A;color:#fff;padding:18px 24px;margin:40px -60px 32px;display:flex;align-items:baseline;gap:16px}
+.q-num{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:22px;font-weight:700;color:#E8511A;min-width:60px}
+.q-title{font-size:15px;font-weight:600;line-height:1.3}
+.q-comp{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:10px;font-weight:600;background:rgba(232,81,26,0.3);padding:3px 9px;border-radius:10px;margin-left:auto;white-space:nowrap}
+
+/* Énoncé */
+.q-enonce{font-style:italic;color:#555;background:#f9f8f5;border-left:3px solid #E8511A;padding:12px 16px;margin-bottom:24px;font-size:12px;border-radius:0 6px 6px 0}
+
+/* Contenu */
+.q-content{font-size:13px;line-height:1.75}
+.q-content p{margin-bottom:12px}
+.q-content strong{font-weight:700;color:#1B2A4A}
+.q-content em{font-style:italic;color:#555}
+.q-content h3{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:13px;font-weight:700;color:#1B2A4A;margin:20px 0 8px;border-bottom:1px solid #eee;padding-bottom:5px}
+.q-content h4{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;font-weight:700;color:#E8511A;margin:16px 0 6px}
+
+/* Tables */
+.q-content table{width:100%;border-collapse:collapse;margin:16px 0;font-size:12px}
+.q-content table th{background:#1B2A4A;color:#fff;padding:9px 12px;text-align:left;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-weight:600;font-size:11px}
+.q-content table td{padding:9px 12px;border:1px solid #e0ddd5;vertical-align:top;line-height:1.5}
+.q-content table tr:nth-child(even) td{background:#faf9f6}
+.q-content table tr:hover td{background:#f0eee8}
+/* Table encadrée (1 ligne = bloc texte) */
+.q-content table.bloc-table td{background:#f0f4fa;border:1px solid #c5d5e8;font-style:italic;padding:14px 16px}
+.q-content table.bloc-orange td{background:#fff8f5;border:1px solid #f5c5a8;padding:14px 16px}
+
+/* Liste */
+.q-content ul{margin:8px 0 12px 20px}
+.q-content ul li{margin-bottom:4px}
+
+/* Encadré remarque Claude */
+.claude-note{background:#EEF2FF;border:1px solid #9BA5F5;border-left:4px solid #6D4AFF;padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:11.5px;color:#3730A3}
+.claude-note strong{color:#4338CA;display:block;margin-bottom:4px}
+
+/* Placeholder à rédiger */
+.todo-section{padding:0 60px 60px}
+.todo-placeholder{background:#fafafa;border:2px dashed #ddd;border-radius:10px;padding:32px;text-align:center;color:#aaa;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
+.todo-placeholder h3{font-size:14px;font-weight:600;color:#bbb;margin-bottom:6px}
+.todo-placeholder p{font-size:12px}
+.todo-q-header{background:#e8e6e0;padding:18px 24px;margin:40px -60px 32px;display:flex;align-items:baseline;gap:16px}
+.todo-q-header .q-num{color:#bbb}
+.todo-q-header .q-title{font-size:14px;color:#999}
+
+/* Pied de page de section */
+.section-footer{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:10px;color:#aaa;text-align:right;padding:0 60px 12px;border-top:1px solid #f0eeea;padding-top:12px;margin-top:8px}
+
+/* Séparateur de blocs */
+.bloc-divider{background:#1B2A4A;color:#fff;padding:14px 60px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
+.bloc-divider span{color:#E8511A}
+
+@media print{
+  @page{size:A4 portrait;margin:1.5cm 1.5cm 1.5cm 1.5cm}
+  .no-print{display:none}
+  body{background:#fff;font-size:11px}
+  .page{box-shadow:none;max-width:none;margin:0;padding:0}
+  .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:60px 40px;page-break-after:always;min-height:auto}
+  .toc{page-break-after:always;padding:30px 40px}
+  .bloc-divider{-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-before:always;page-break-after:avoid;margin:0;padding:14px 40px}
+  .question-section{page-break-before:always;page-break-inside:avoid;padding:0 40px 30px}
+  .todo-section .todo-q-header{page-break-before:always;page-break-after:avoid;margin:0 -40px 20px}
+  .todo-section .todo-placeholder{page-break-inside:avoid}
+  .todo-section{padding:0 40px 30px}
+  .q-header{-webkit-print-color-adjust:exact;print-color-adjust:exact;margin:20px -40px 20px;padding:14px 18px;page-break-after:avoid}
+  .q-content table{page-break-inside:avoid;font-size:10px}
+  .q-content h3{page-break-after:avoid}
+  .q-content h4{page-break-after:avoid}
+  .section-footer{-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:8px 40px;margin-top:10px}
+  .cover h1{font-size:26px}
+  .q-content{font-size:11px;line-height:1.6}
+  .q-enonce{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <button class="btn-action btn-print" onclick="window.print()">🖨 Imprimer / PDF</button>
+</div>
+
+<div class="page">
+
+<!-- COUVERTURE -->
+<div class="cover">
+  <div class="cover-tag">Dossier écrit de soutenance</div>
+  <h1>PlayOff Amateurs<br><span>TerrainLink</span></h1>
+  <div class="cover-sub">Bootcamp Product Builder No-Code</div>
+  <div class="cover-meta">
+    RNCP 39108 — École Cube<br>
+    Sandrine Darrieu — CHIC OUF — Juin 2026
+  </div>
+  <div class="cover-bloc">
+    <strong>Périmètre de ce dossier</strong><br>
+    Bloc 1 : Concevoir et piloter un projet de solution No-Code (Q1.1 à Q1.5) — <strong>Rédigé ✅</strong><br>
+    Bloc 2 : Construire le produit (Q2.1 à Q2.4) — À rédiger<br>
+    Bloc 3 : Traitement des données (Q3.1 à Q3.2) — À rédiger<br>
+    Bloc 4 : Sécurité & conformité (Q4.1 à Q4.4) — À rédiger
+  </div>
+</div>
+
+<!-- TABLE DES MATIÈRES -->
+<div class="toc" id="toc">
+  <h2>Table des matières</h2>
+
+  <div class="toc-bloc">
+    <div class="toc-bloc-title">Bloc 1 — Concevoir et piloter un projet No-Code</div>
+    <div class="toc-item"><span class="toc-num">Q1.1</span><a href="#q11">Analyse des besoins et choix de plateformes</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+    <div class="toc-item"><span class="toc-num">Q1.2</span><a href="#q12">Parties prenantes et accessibilité</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+    <div class="toc-item"><span class="toc-num">Q1.3</span><a href="#q13">Benchmark — Outil d'audit IA (OMNI)</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+    <div class="toc-item"><span class="toc-num">Q1.4</span><a href="#q14">Maquettage et expérience utilisateur</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+    <div class="toc-item"><span class="toc-num">Q1.5</span><a href="#q15">Planification et pilotage du projet</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+  </div>
+
+  <div class="toc-bloc">
+    <div class="toc-bloc-title">Bloc 2 — Construire le produit</div>
+    <div class="toc-item"><span class="toc-num">Q2.1</span><a href="#q21">Conception d'interface utilisateur</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q2.2</span><a href="#q22">Architecture de données</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q2.3</span><a href="#q23">Intégrations, APIs et sécurisation</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q2.4</span><a href="#q24">Documentation technique</a><span class="toc-statut ts-todo">À rédiger</span></div>
+  </div>
+
+  <div class="toc-bloc">
+    <div class="toc-bloc-title">Bloc 3 — Traitement & exploitation des données</div>
+    <div class="toc-item"><span class="toc-num">Q3.1</span><a href="#q31">Logique métier et traitement des données</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q3.2</span><a href="#q32">Tableaux de bord et datavisualisation</a><span class="toc-statut ts-todo">À rédiger</span></div>
+  </div>
+
+  <div class="toc-bloc">
+    <div class="toc-bloc-title">Bloc 4 — Sécurité & conformité</div>
+    <div class="toc-item"><span class="toc-num">Q4.1</span><a href="#q41">Évaluation et audit de sécurité</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q4.2</span><a href="#q42">Sauvegarde et gestion d'incidents</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q4.3</span><a href="#q43">Protection des données et conformité RGPD</a><span class="toc-statut ts-todo">À rédiger</span></div>
+    <div class="toc-item"><span class="toc-num">Q4.4</span><a href="#q44">Sensibilisation des équipes</a><span class="toc-statut ts-todo">À rédiger</span></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- BLOC 1 -->
+<!-- ============================================================ -->
+<div class="bloc-divider">Bloc 1 — <span>Concevoir et piloter un projet de solution No-Code</span></div>
+
+<!-- Q1.1 -->
+<div class="question-section" id="q11">
+  <div class="q-header">
+    <span class="q-num">Q1.1</span>
+    <span class="q-title">Analyse des besoins et choix de plateformes</span>
+    <span class="q-comp">C1, C2</span>
+  </div>
+  <div class="q-enonce">Présentez les besoins de votre projet, expliquez pourquoi les plateformes No-Code mobilisées sont adaptées, comparez leurs forces et limites au regard des spécificités du projet. 1 visuel max.</div>
+  <div class="q-content">
+    <h3>Contexte et besoins du projet</h3>
+    <table class="bloc-table"><tr><td>PlayOff Amateurs organisait ses compétitions sportives à l'aide de tableurs multiples, d'échanges email non structurés et d'outils hétérogènes — sans vision commune du cycle de vie d'une compétition. La mission consistait à introduire progressivement le NoCode pour : (1) structurer et centraliser les données opérationnelles, (2) automatiser les flux critiques, et (3) concevoir, prototyper et lancer TerrainLink, une nouvelle offre digitale de location de terrains entre amis.</td></tr></table>
+
+    <table>
+      <tr>
+        <th>Plateforme</th>
+        <th>Argument clé</th>
+        <th>Limites dans le contexte PlayOff</th>
+      </tr>
+      <tr><td><strong>Notion</strong></td><td>Documentation centralisée, suivi structuré du projet</td><td>Couche documentaire uniquement — déconnectée des données live (Airtable/Make). Risque de divergence si non synchronisée (3 versions de palette identifiées en cours de mission).</td></tr>
+      <tr><td><strong>Tally</strong></td><td>Formulaire de recueil des besoins, sans code</td><td>Nécessite une synchronisation supplémentaire via Make pour alimenter la base.</td></tr>
+      <tr><td><strong>Airtable</strong></td><td>Base relationnelle accessible aux non-développeurs</td><td>Automatisations natives et volume limités selon le plan ; formules de jointure complexes (FIND/ARRAYJOIN) pour les relations multi-niveaux.</td></tr>
+      <tr><td><strong>Make</strong></td><td>Automatisation sans code, connecteurs Google natifs (Gmail, Calendar, Docs)</td><td>Consommation d'opérations à surveiller ; trigger Watch Records nécessitant un champ Last Modified dédié.</td></tr>
+      <tr><td><strong>Figma</strong></td><td>Maquettes précises, identité visuelle cohérente</td><td>Ne génère pas de code ; retranscription manuelle vers Lovable/Bubble nécessaire. Risque d'incohérence si plusieurs versions du Design System circulent.</td></tr>
+      <tr><td><strong>Lovable</strong></td><td>Démo rapide, validation produit immédiate</td><td>Aucune base de données ni authentification réelle ; décalages observés build/déploiement. Non pensé pour la production.</td></tr>
+      <tr><td><strong>Bubble</strong></td><td>Logique applicative durable, sans code</td><td>Courbe d'apprentissage réelle ; non encore implémenté à ce stade (Sprint 5–6). Coût évolutif selon la montée en charge.</td></tr>
+      <tr><td><strong>ChatGPT / Claude</strong></td><td>Assistance rédactionnelle et génération de contenu</td><td>Vérification humaine systématique nécessaire — ne remplace pas la connaissance métier.</td></tr>
+    </table>
+
+    <table class="bloc-orange"><tr><td><em>La stack est volontairement progressive : outils internes d'abord (Notion, Airtable, Make), puis outils produit (Figma, Lovable, Bubble) dès que la mission évolue vers la création de TerrainLink. Ce séquençage limite les risques et permet d'apporter de la valeur rapidement à chaque sprint.</em></td></tr></table>
+  </div>
+  <div class="section-footer">PlayOff Amateurs — TerrainLink / Bootcamp Product Builder No-Code — École Cube</div>
+</div>
+
+<!-- Q1.2 -->
+<div class="question-section" id="q12">
+  <div class="q-header">
+    <span class="q-num">Q1.2</span>
+    <span class="q-title">Parties prenantes et accessibilité</span>
+    <span class="q-comp">C3</span>
+  </div>
+  <div class="q-enonce">Décrivez la méthodologie utilisée pour recueillir les attentes des utilisateurs finaux. Précisez les adaptations envisagées pour les situations de handicap.</div>
+  <div class="q-content">
+    <h3>Le recueil des besoins a reposé sur quatre leviers complémentaires :</h3>
+
+    <h4>1 — Entretiens formalisés en comptes rendus (CR)</h4>
+    <p>Chaque échange avec Jérôme (Directeur des Opérations) et François (Directeur Général) fait l'objet d'un CR structuré : contexte, besoins exprimés, contraintes évoquées, décision retenue. Cette formalisation permet de tracer l'évolution des besoins au fil des sprints et de justifier les choix techniques a posteriori. Les CR couvrent 11 réunions de mission, du cadrage initial (Sprint 0) au lancement de TerrainLink (Sprint 4).</p>
+
+    <h4>2 — Ateliers de suivi itératifs (Sprint Reviews)</h4>
+    <p>Les Sprint Reviews bi-hebdomadaires fonctionnent comme de véritables ateliers : présentation de l'avancement, recueil des réactions à chaud, ajustement des priorités. C'est dans ce cadre que les demandes d'évolution ont émergé progressivement — validation des équipes (Sprint 2), préparation des compétitions (Sprint 3), puis lancement de TerrainLink (Sprint 4) — plutôt que d'être figées en amont.</p>
+
+    <h4>3 — Observation des processus internes</h4>
+    <p>Au-delà des entretiens déclaratifs, une analyse du fonctionnement réel des équipes a permis de faire émerger des besoins non formulés spontanément. Exemple concret : avant le scénario Make 1, la validation d'une équipe inscrite reposait sur des relances manuelles de Jérôme aux capitaines et joueurs, source d'oublis et de retards. C'est cette observation directe qui a permis de concevoir une automatisation adaptée à l'usage réel plutôt qu'à l'usage déclaré.</p>
+
+    <h4>4 — Questionnaire structuré (Tally)</h4>
+    <p>En complément des entretiens qualitatifs, un questionnaire Tally permet de recueillir des retours plus larges et quantifiables auprès des utilisateurs finaux (joueurs, capitaines, clubs) — utile pour valider une intention produit à plus grande échelle, au-delà du cercle restreint des interlocuteurs directs.</p>
+
+    <h3>Adaptations envisagées pour les situations de handicap</h3>
+    <table>
+      <tr><th>Axe</th><th>Mesure envisagée</th></tr>
+      <tr><td><strong>Accessibilité des questionnaires</strong></td><td>Questionnaires conçus pour être compatibles avec les lecteurs d'écran : structure logique, labels explicites, ratios de contraste respectant les recommandations WCAG.</td></tr>
+      <tr><td><strong>Alternative à l'entretien oral</strong></td><td>Pour les personnes en difficulté de communication verbale, le questionnaire écrit ou l'échange asynchrone constitue une alternative directement applicable.</td></tr>
+      <tr><td><strong>Accessibilité intégrée dès la conception</strong></td><td>La vigilance sur les interfaces (contrastes, navigation clavier, alternatives textuelles) est posée comme critère de conception dès le recueil de besoins, non comme correction ultérieure.</td></tr>
+      <tr><td><strong>Veille réglementaire</strong></td><td>L'European Accessibility Act (EAA), en vigueur depuis juin 2025, étend les obligations d'accessibilité aux services privés d'e-commerce — catégorie dans laquelle s'inscrit le module de réservation et de paiement de TerrainLink. PlayOff Amateurs relève aujourd'hui de l'exemption micro-entreprise, mais ce point mérite d'être suivi si l'activité se développe. Le référentiel technique RGAA (norme EN 301 549) reste la base à mobiliser si une mise en conformité s'avérait nécessaire.</td></tr>
+    </table>
+  </div>
+  <div class="section-footer">PlayOff Amateurs — TerrainLink / Bootcamp Product Builder No-Code — École Cube</div>
+</div>
+
+<!-- Q1.3 -->
+<div class="question-section" id="q13">
+  <div class="q-header">
+    <span class="q-num">Q1.3</span>
+    <span class="q-title">Benchmark — Outil d'audit IA de la base Airtable (OMNI)</span>
+    <span class="q-comp">C4, C6</span>
+  </div>
+  <div class="q-enonce">Présentez un benchmark réalisé pour sélectionner un outil, module ou service tiers. Critères retenus, notation, recommandation argumentée. Comment cette analyse a-t-elle facilité la prise de décision ? 1 visuel max.</div>
+  <div class="q-content">
+    <table class="bloc-table"><tr><td><strong>Contexte</strong> — Après la structuration initiale de la base Airtable (5 tables, semaine 2), un audit de la modélisation était nécessaire pour identifier les incohérences avant de lancer les automatisations Make. Trois approches ont été comparées : OMNI (IA native intégrée à Airtable), révision manuelle, et passage par un assistant IA généraliste (ChatGPT/Claude). <em>Critères retenus : intégration native à Airtable (sans export), rapidité du diagnostic, profondeur de l'analyse relationnelle, coût, adéquation au travail en solo.</em></td></tr></table>
+
+    <table>
+      <tr>
+        <th>Critère</th>
+        <th>OMNI (IA Airtable)</th>
+        <th>Révision manuelle</th>
+        <th>ChatGPT / Claude</th>
+      </tr>
+      <tr><td><strong>Intégration native Airtable</strong></td><td>★★★★★</td><td>★★★★★</td><td>★★</td></tr>
+      <tr><td><strong>Rapidité du diagnostic</strong></td><td>★★★★★</td><td>★★</td><td>★★★</td></tr>
+      <tr><td><strong>Profondeur analyse relationnelle</strong></td><td>★★★★</td><td>★★★</td><td>★★★★★</td></tr>
+      <tr><td><strong>Coût</strong></td><td>★★★★</td><td>★★★★★</td><td>★★★★</td></tr>
+      <tr><td><strong>Adéquation travail en solo</strong></td><td>★★★★★</td><td>★★★</td><td>★★★★</td></tr>
+      <tr><td><strong>Note globale</strong></td><td><strong>★★★★</strong></td><td><strong>★★★</strong></td><td><strong>★★★★</strong></td></tr>
+    </table>
+    <p><em>Notation à dire d'expert — usage réel d'OMNI sur la base PlayOff (243 contacts, 5 tables) et expériences comparatives sur d'autres projets.</em></p>
+
+    <h3>Recommandation : OMNI retenu</h3>
+    <table class="bloc-table"><tr><td>OMNI analyse directement dans Airtable, sans étape d'export ni reformulation du contexte — diagnostic obtenu en quelques minutes, recommandations formulées dans le vocabulaire Airtable (liens, lookups, Autonumber). Corrections réellement appliquées à la suite : liaison Contact ↔ Équipes/Clubs, simplification du nommage des champs techniques. Limite identifiée : certains cas spécifiques (ex. lien Disciplines ↔ Compétition) sont hors périmètre d'OMNI — un passage complémentaire par ChatGPT/Claude avec le contexte métier détaillé permet d'affiner ces points.</td></tr></table>
+
+    <p>Restitution pour la prise de décision : le diagnostic a été traduit en plan d'action dans le journal de mission (statut « corrigé » / « non retenu » + justification courte par recommandation). Ce format permet une lecture rapide de l'écart entre l'état initial et l'état cible, et constitue une preuve de traçabilité mobilisable en soutenance.</p>
+  </div>
+  <div class="section-footer">PlayOff Amateurs — TerrainLink / Bootcamp Product Builder No-Code — École Cube</div>
+</div>
+
+<!-- Q1.4 -->
+<div class="question-section" id="q14">
+  <div class="q-header">
+    <span class="q-num">Q1.4</span>
+    <span class="q-title">Maquettage et expérience utilisateur — TerrainLink</span>
+    <span class="q-comp">C5</span>
+  </div>
+  <div class="q-enonce">Présentez votre maquette (wireframe ou prototype) et le parcours utilisateur illustré. Expliquez vos choix d'ergonomie et de design. 3 visuels max.</div>
+  <div class="q-content">
+    <h3>Cas d'usage de référence (extrait du brief École Cube)</h3>
+    <table class="bloc-table"><tr><td><em>« En tant que joueur amateur, je veux pouvoir voir rapidement les terrains disponibles près de chez moi, afin de choisir un terrain, réserver un créneau et organiser un match avec mes amis, en comprenant facilement le coût total et la répartition des frais. »</em></td></tr></table>
+
+    <table>
+      <tr>
+        <th>Écran 1 — Sélection de terrain</th>
+        <th>Écran 2 — Réservation de créneau</th>
+        <th>Écran 3 — Récapitulatif & paiement</th>
+      </tr>
+      <tr>
+        <td>Liste des terrains à proximité, avec filtres rapides (date, sport) et prix horaire visible directement sur chaque carte. <em>Choix d'ergonomie : l'information de prix est affichée dès la liste, sans aller-retour sur un écran de détail, pour limiter la friction avant la décision.</em></td>
+        <td>Sélection du jour, de l'heure, et saisie du nombre de participants. Le compteur est volontairement informatif et libre : TerrainLink concerne une réservation entre amis, sans contrainte d'effectif réglementaire (≠ gestion des compétitions PlayOff). Le nombre saisi sert uniquement au calcul de répartition. <em>Distinction explicitement validée dans le brief : le minimum de 5 joueurs est une règle PlayOff (compétitions officielles), pas une règle TerrainLink.</em></td>
+        <td>Un seul payeur (l'organisateur) valide et règle la totalité du montant pour confirmer le créneau. Le montant dû par chaque participant est affiché à titre informatif, figé au moment de la réservation — pas de recalcul si le groupe change ensuite. <em>Ce choix évite la complexité d'un paiement fractionné en temps réel, tout en répondant à l'exigence de transparence du coût formulée dans le cas d'usage de référence.</em></td>
+      </tr>
+    </table>
+
+    <h3>Choix d'ergonomie et de Design System</h3>
+    <table>
+      <tr><th>Élément de design</th><th>Justification</th></tr>
+      <tr><td><strong>Palette officielle</strong></td><td>Violet #6D4AFF (identité TerrainLink), Bleu #4FA3FF (secondaire), Vert #22C55E (CTA) — alignée sur le logo PlayOff pour garantir la cohérence entre le site web existant et les nouveaux outils digitaux. Cette palette remplace la charte Navy/Orange du site actuel pour les nouveaux produits.</td></tr>
+      <tr><td><strong>Typographies</strong></td><td>Poppins semi-bold pour les titres, Inter regular pour le texte courant — duo lisible sur mobile, cohérent avec un usage rapide entre amis plutôt qu'une lecture approfondie.</td></tr>
+      <tr><td><strong>Hiérarchie visuelle</strong></td><td>Le CTA (vert) est systématiquement isolé en bas d'écran, pour qu'une action de réservation reste identifiable en un coup d'œil quel que soit l'écran consulté.</td></tr>
+      <tr><td><strong>Sobriété volontaire</strong></td><td>Design System minimal : 1 couleur principale, 1 secondaire, 1 neutre, 1 CTA. Peu d'éléments par écran — conforme à la posture Product Builder (pas designer) demandée par le brief École Cube.</td></tr>
+      <tr><td><strong>Prototype Lovable</strong></td><td>Ces écrans servent de brief visuel pour le prototype cliquable Lovable (Sprint 4, semaine 7), dont l'objectif est de valider l'intention produit avant le développement Bubble.</td></tr>
+    </table>
+  </div>
+  <div class="section-footer">PlayOff Amateurs — TerrainLink / Bootcamp Product Builder No-Code — École Cube</div>
+</div>
+
+<!-- Q1.5 -->
+<div class="question-section" id="q15">
+  <div class="q-header">
+    <span class="q-num">Q1.5</span>
+    <span class="q-title">Planification et pilotage du projet</span>
+    <span class="q-comp">C7, C8</span>
+  </div>
+  <div class="q-enonce">Comment planifier et piloter votre projet ? Jalons, outils de suivi, gestion des écarts ou imprévus. Collaboration entre équipes techniques et métier. 2 visuels max.</div>
+  <div class="q-content">
+    <h3>Visuel 1 — Rétroplanning de la mission (12 semaines / 6 sprints)</h3>
+    <table>
+      <tr><th>Sprint</th><th>Sem.</th><th>Livrable principal</th><th>Outil</th><th>Statut</th></tr>
+      <tr><td><strong>Sprint 1</strong></td><td>S1</td><td>Roadmap 12 semaines + Backlog + Template Sprint Review</td><td>Notion</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 1</strong></td><td>S2</td><td>Base Airtable structurée (5 tables) + Page Sécurité</td><td>Airtable</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 2</strong></td><td>S3</td><td>Base enrichie + vues métier + formulaire + automatisations natives</td><td>Airtable</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 2</strong></td><td>S4</td><td>Benchmark OMNI + Make/Zapier/n8n + Scénario Make 1</td><td>Make</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 3</strong></td><td>S5</td><td>Scénario Make 2 + Page Sécurité Make + Passation Ops</td><td>Make</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 3</strong></td><td>S6</td><td>Design System Figma + écrans clés</td><td>Figma</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 4</strong></td><td>S7</td><td>Démo Lovable cliquable + prompt produit</td><td>Lovable</td><td>🟡 En cours</td></tr>
+      <tr><td><strong>Sprint 4</strong></td><td>S8</td><td>Schéma BDD (9 objets) + matrice de permissions</td><td>Figma/Notion</td><td>✅ Fait</td></tr>
+      <tr><td><strong>Sprint 5</strong></td><td>S9</td><td>Définition de la stack technique</td><td>Notion</td><td>À faire</td></tr>
+      <tr><td><strong>Sprint 5</strong></td><td>S10</td><td>Implémentation MVP sous Bubble</td><td>Bubble</td><td>À faire</td></tr>
+      <tr><td><strong>Sprint 6</strong></td><td>S11</td><td>Sécurisation, documentation, tests</td><td>Bubble</td><td>À faire</td></tr>
+      <tr><td><strong>Sprint 6</strong></td><td>S12</td><td>Finalisation et préparation soutenance</td><td>Tous</td><td>À faire</td></tr>
+    </table>
+
+    <h3>Visuel 2 — Registre des écarts et actions correctives</h3>
+    <table>
+      <tr><th>Période</th><th>Écart constaté</th><th>Cause identifiée</th><th>Action corrective</th></tr>
+      <tr><td><strong>Sprint 2 / S4</strong></td><td>Benchmark Make/Zapier/n8n marqué « Fait » dans le suivi sans document réel.</td><td>Statut déclaré sur la base du planning initial, sans vérification croisée avec les livrables.</td><td>Reproduit a posteriori ; statut corrigé. ✅</td></tr>
+      <tr><td><strong>Sprint 3–4</strong></td><td>Trois palettes différentes coexistaient (Figma, Lovable, identité officielle du logo).</td><td>Travaux menés en parallèle sans page de référence unique consultée systématiquement.</td><td>Palette officielle validée (Violet/Bleu/Vert) ; page référence créée dans Notion. ✅</td></tr>
+      <tr><td><strong>Sprint 4 / S7</strong></td><td>Écran Lovable non cliquable malgré un code correct.</td><td>Décalage build/déploiement (latence de publication, pas un bug de code).</td><td>Identifié par comparaison de deux exports successifs ; rafraîchissement forcé. ✅</td></tr>
+      <tr><td><strong>Sprint 2 / S3</strong></td><td>Documentation de la semaine d'alimentation de la base non formalisée en CR.</td><td>Travail réalisé mais non consigné au moment de l'exécution.</td><td>CR reconstituée (RM2) sur la base de la Sprint Review réelle. ✅</td></tr>
+    </table>
+
+    <table class="bloc-orange"><tr><td>Méthode systémique appliquée à chaque écart : confronter le statut déclaré à la source réelle plutôt que de faire confiance au suivi déclaratif. Ce réflexe de vérification croisée est devenu un standard de pilotage sur l'ensemble de la mission. Coordination technique/métier : les Sprint Reviews bi-hebdomadaires jouent un rôle de traduction — les arbitrages techniques sont présentés à Jérôme et François en langage métier (impact opérationnel), tandis que leurs demandes stratégiques sont reformulées en besoins fonctionnels exploitables. Les CR constituent la mémoire commune entre ces deux niveaux d'échange, consultable à tout moment.</td></tr></table>
+  </div>
+  <div class="section-footer">PlayOff Amateurs — TerrainLink / Bootcamp Product Builder No-Code — École Cube</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- BLOC 2 — À rédiger -->
+<!-- ============================================================ -->
+<div class="bloc-divider">Bloc 2 — <span>Construire le produit</span></div>
+
+<div class="todo-section">
+  <div class="todo-q-header" id="q21"><span class="q-num">Q2.1</span><span class="q-title">Conception d'interface utilisateur — C9</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : Figma Design System S6, 3 écrans TerrainLink, prototype Lovable S7</p></div>
+
+  <div class="todo-q-header" id="q22"><span class="q-num">Q2.2</span><span class="q-title">Architecture de données — C10</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : schéma BDD 9 objets S8, 5 tables Airtable S2, dictionnaire de données</p></div>
+
+  <div class="todo-q-header" id="q23"><span class="q-num">Q2.3</span><span class="q-title">Intégrations, APIs et sécurisation — C11, C12, C13</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : scénarios Make 1 & 2, connexions Gmail/Calendar/Docs, page Sécurité Make</p></div>
+
+  <div class="todo-q-header" id="q24"><span class="q-num">Q2.4</span><span class="q-title">Documentation technique — C14</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : documentation Airtable, CR RM1–RM11, passation opérationnelle Jérôme</p></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- BLOC 3 — À rédiger -->
+<!-- ============================================================ -->
+<div class="bloc-divider">Bloc 3 — <span>Traitement & exploitation des données</span></div>
+
+<div class="todo-section">
+  <div class="todo-q-header" id="q31"><span class="q-num">Q3.1</span><span class="q-title">Logique métier et traitement des données — C15, C16</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : règles de gestion Airtable (équipe complète = 5 joueurs, match valide), formules calculées, scénarios Make</p></div>
+
+  <div class="todo-q-header" id="q32"><span class="q-num">Q3.2</span><span class="q-title">Tableaux de bord et datavisualisation — C17</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : vues Airtable (Équipes complètes, Matchs prêts, Compétitions à piloter), propositions tableaux de pilotage par rôle</p></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- BLOC 4 — À rédiger -->
+<!-- ============================================================ -->
+<div class="bloc-divider">Bloc 4 — <span>Sécurité & conformité</span></div>
+
+<div class="todo-section">
+  <div class="todo-q-header" id="q41"><span class="q-num">Q4.1</span><span class="q-title">Évaluation et audit de sécurité — C20, C22</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : page Sécurité Make (inventaire données, tableaux risques par sévérité)</p></div>
+
+  <div class="todo-q-header" id="q42"><span class="q-num">Q4.2</span><span class="q-title">Sauvegarde et gestion d'incidents — C21, C23</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : procédure incident rédigée (&lt;1h désactivation, &lt;72h déclaration CNIL si fuite avérée)</p></div>
+
+  <div class="todo-q-header" id="q43"><span class="q-num">Q4.3</span><span class="q-title">Protection des données et conformité RGPD — C24, C25</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Matière disponible : évolutions prévues (champ Désinscrit, rotation tokens API, logs centralisés)</p></div>
+
+  <div class="todo-q-header" id="q44"><span class="q-num">Q4.4</span><span class="q-title">Sensibilisation des équipes — C26</span></div>
+  <div class="todo-placeholder"><h3>À rédiger</h3><p>Proposition : fiche réflexe 1 page pour Jérôme/François sur les bonnes pratiques Airtable/Make</p></div>
+</div>
+
+<!-- Pied de page final -->
+<div style="background:#1B2A4A;color:rgba(255,255,255,0.5);padding:20px 60px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:10px;text-align:center">
+  PlayOff Amateurs / TerrainLink — Dossier de soutenance — Sandrine Darrieu — CHIC OUF — RNCP 39108 — École Cube — Juin 2026
+</div>
+
+</div><!-- fin .page -->
+</body>
+</html>

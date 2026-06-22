@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayOff / TerrainLink — Suivi 2 projets</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;padding:1.5rem}
+h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
+.meta{font-size:12px;color:#777;margin-bottom:1.2rem}
+.print-btn{display:inline-flex;align-items:center;gap:6px;margin-bottom:1.2rem;padding:7px 14px;border:1px solid #1B2A4A;border-radius:6px;background:#1B2A4A;color:#fff;font-size:12px;cursor:pointer}
+.print-btn:hover{background:#142036}
+
+/* Légende statuts */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1.2rem;align-items:center;font-size:12px;color:#555}
+.leg{display:flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.d-done{background:#28a745}.d-partial{background:#ffc107}.d-todo{background:#dc3545}
+
+/* Résumé projets */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.proj-card{border-radius:10px;padding:14px 16px;border-left:4px solid}
+.pc1{background:#EAF1FB;border-color:#185FA5}
+.pc2{background:#F0EBF8;border-color:#6D4AFF}
+.proj-card h2{font-size:13px;font-weight:600;margin-bottom:4px}
+.pc1 h2{color:#185FA5}.pc2 h2{color:#6D4AFF}
+.proj-card .sub{font-size:11px;color:#666;margin-bottom:8px}
+.tools-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tool{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px}
+.t1-tool{background:#d0e4f7;color:#0d4a8a}
+.t2-tool{background:#e4d9f7;color:#4a1aaa}
+.tool-opt{opacity:0.65;border:1px dashed currentColor}
+
+/* Sprint blocks */
+.sprint-block{margin-bottom:1rem;border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff}
+.sprint-head{padding:11px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;background:#f0eeea}
+.sprint-head:hover{background:#e8e6e0}
+.sprint-head h3{font-size:12px;font-weight:600;color:#1B2A4A;flex:1}
+.chevron{font-size:16px;color:#888;transition:transform 0.2s;display:inline-block}
+.sprint-body{display:none;border-top:1px solid #eee}
+.sprint-body.open{display:block}
+
+/* Semaine rows */
+.sem-row{padding:13px 16px;border-bottom:1px solid #f0eeea}
+.sem-row:last-child{border-bottom:none}
+.sem-title{font-size:11px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px}
+.row-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.proj-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.tag-p1{background:#d0e4f7;color:#0d4a8a}
+.tag-p2{background:#e4d9f7;color:#4a1aaa}
+.badge{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px}
+.b-done{background:#d4edda;color:#155724}
+.b-partial{background:#fff3cd;color:#856404}
+.b-todo{background:#f8d7da;color:#721c24}
+.sem-tools{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.s-tool{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.st1{background:#d0e4f7;color:#0d4a8a}
+.st2{background:#e4d9f7;color:#4a1aaa}
+.st-opt{opacity:0.6;border:1px dashed currentColor}
+
+/* Colonnes contenu */
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.col-head{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:4px}
+.col-body{font-size:11.5px;color:#333;line-height:1.6}
+.col-fait-p1{border-left:3px solid #185FA5;padding-left:7px}
+.col-fait-p2{border-left:3px solid #6D4AFF;padding-left:7px}
+
+/* Milestone */
+.milestone{font-size:11px;font-weight:600;margin-top:8px;padding:4px 8px;border-radius:5px;display:inline-block}
+.ms-end{background:#d4edda;color:#155724}
+.ms-start{background:#e4d9f7;color:#4a1aaa}
+.ms-both{background:#fff3cd;color:#856404}
+
+@media print{
+  body{background:#fff;padding:0.5rem}
+  .sprint-body{display:block!important}
+  .chevron,.print-btn{display:none}
+  .sprint-block{break-inside:avoid;margin-bottom:0.8rem}
+  .cols{grid-template-columns:1fr 1fr 1fr}
+}
+@media(max-width:700px){
+  .cols{grid-template-columns:1fr}
+  .proj-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<h1>PlayOff Amateurs / TerrainLink — Suivi 2 projets, 12 semaines</h1>
+<p class="meta">RNCP 39108 · Product Builder No-Code · École Cube · Bootcamp 2026</p>
+
+<button class="print-btn" onclick="window.print()">🖨 Imprimer / Exporter PDF</button>
+
+<div class="legend">
+  <div class="leg"><div class="dot d-done"></div>Fait</div>
+  <div class="leg"><div class="dot d-partial"></div>Partiel</div>
+  <div class="leg"><div class="dot d-todo"></div>À faire</div>
+  <span style="color:#bbb">|</span>
+  <span style="font-size:11px;color:#888">Outil optionnel = contour pointillé</span>
+</div>
+
+<!-- Résumé projets -->
+<div class="proj-grid">
+  <div class="proj-card pc1">
+    <h2>Projet 1 — Ops interne PlayOff</h2>
+    <div class="sub">Semaines 1 à 5 · Sprints 1 à 3 (partiel) · Statut : ✅ Terminé</div>
+    <div class="sub">Objectif : structurer et automatiser la gestion des compétitions</div>
+    <div class="tools-list">
+      <span class="tool t1-tool">Notion</span>
+      <span class="tool t1-tool">Airtable</span>
+      <span class="tool t1-tool">Make</span>
+      <span class="tool t1-tool">Gmail</span>
+      <span class="tool t1-tool">Google Calendar</span>
+      <span class="tool t1-tool">Google Docs</span>
+      <span class="tool t1-tool">IA (données test)</span>
+    </div>
+  </div>
+  <div class="proj-card pc2">
+    <h2>Projet 2 — TerrainLink</h2>
+    <div class="sub">Semaines 6 à 12 · Sprints 3 (partiel) à 6 · Statut : ⚡ En cours</div>
+    <div class="sub">Objectif : concevoir et développer l'app de location de terrains entre amis</div>
+    <div class="tools-list">
+      <span class="tool t2-tool">Notion</span>
+      <span class="tool t2-tool">Figma</span>
+      <span class="tool t2-tool">Lovable</span>
+      <span class="tool t2-tool">Bubble</span>
+      <span class="tool t2-tool tool-opt">Airtable ※</span>
+      <span class="tool t2-tool tool-opt">Make ※</span>
+    </div>
+    <div style="font-size:10px;color:#888;margin-top:6px">※ Optionnels selon choix de stack (Semaine 9)</div>
+  </div>
+</div>
+
+<div id="sprints"></div>
+
+<script>
+const data = [
+  {
+    sprint:"Sprint 1 — Semaines 1 & 2 · Structuration du projet et des données métier",
+    sems:[
+      {
+        title:"Semaine 1 — Prise de poste et cadrage produit",
+        projet:"p1", statut:"done",
+        tools:["Notion"],
+        attendu:"Roadmap 12 semaines dans Notion (6 sprints × 2 sem., objectif unique, outils, nature du travail par sprint). Backlog initial avec 6 champs obligatoires (Titre, Description, Type, Priorité, Statut, Sprint cible). Template Sprint Review duplicable (7 sections exactes, phrase d'aide par section). Première Sprint Review complétée et reliée au backlog fictif et à la roadmap via liens Notion.",
+        conditions:"Roadmap = vue structurée, pas de texte libre. Template : 7 sections dans l'ordre exact du brief. Liens Notion croisés obligatoires entre Sprint Review, roadmap et item backlog. Démontrer que le Notion est utilisable en réunion.",
+        realise:"Notion workspace opérationnel (flying-rest-f84.notion.site). Roadmap 12 semaines créée avec 6 sprints, objectifs, outils et nature du travail. Backlog 6 champs structuré. Template Sprint Review 7 sections avec phrases d'aide. Première Sprint Review complétée et liée. Compte-rendus RM1–RM2 générés.",
+        milestone:null
+      },
+      {
+        title:"Semaine 2 — Refonte du cycle de vie d'une compétition",
+        projet:"p1", statut:"done",
+        tools:["Airtable","Notion"],
+        attendu:"Base Airtable avec 5 tables reliées : Compétition, Club, Équipe, Match, Contact (avec tous les champs minimum requis et relations inter-tables). Page 🔒 Sécurité dans Notion. Mise à jour Backlog + Roadmap + Sprint Review.",
+        conditions:"Table Compétition : 8 champs min dont statut en 5 valeurs (Brouillon → Terminée). Table Contact : contient des données personnelles → note sécurité obligatoire immédiatement. Toutes les tables doivent être reliées entre elles. Explication des statuts attendue.",
+        realise:"5 tables créées avec tous les champs requis. Relations inter-tables configurées (Club ↔ Équipe ↔ Compétition ↔ Match ↔ Contact). Audit OMNI AI réalisé sur la base pour vérifier cohérence et complétude. Page Sécurité Notion créée avec note sur la visibilité des données de contact. Backlog, Roadmap et Sprint Review mis à jour.",
+        milestone:null
+      }
+    ]
+  },
+  {
+    sprint:"Sprint 2 — Semaines 3 & 4 · De la BDD à l'automatisation",
+    sems:[
+      {
+        title:"Semaine 3 — Alimentation de la base",
+        projet:"p1", statut:"done",
+        tools:["Airtable","Make","Gmail","Google Calendar","IA (données test)","Notion"],
+        attendu:"Airtable enrichi : champs calculés (nb joueurs/équipe, équipe complète, nb équipes/match, match valide, nb équipes/compétition, statut lisible). Vues : Équipes complètes, Équipes incomplètes, Matchs prêts, Compétitions à piloter. Formulaire client avec préremplissage compétition. Automatisation native (passage statut 'Inscription validée' → date de validation renseignée auto). ~30 contacts fictifs générés par IA et injectés. Propositions de tableaux de pilotage par rôle. Documentation Airtable complète. Notion mis à jour.",
+        conditions:"Équipe complète = 5 joueurs minimum. Match valide = date renseignée + 2 équipes complètes. Contact joueur distingué du contact administratif (choix à argumenter). Cas dégradé si équipe passe de 5 à 4 joueurs : comportement défini et explicable. Formulaire sans accès direct à la base. Données de contact masquées par défaut dans les vues.",
+        realise:"Champs calculés ajoutés sur les 3 tables. 4 vues opérationnelles créées. Formulaire avec préremplissage fonctionnel. Automatisation native statut → date validation. ~30 contacts fictifs injectés. Tableaux de pilotage proposés par rôle (Opérations, Direction). Documentation complète dans Airtable. Limite native identifiée : email complexe + SMS + condition délai impossible nativement (demande de Jérôme en fin de semaine) → ouverture sur Make.",
+        milestone:null
+      },
+      {
+        title:"Semaine 4 — Benchmark et automatisations",
+        projet:"p1", statut:"done",
+        tools:["Make","Airtable","Gmail","Google Calendar","Notion"],
+        attendu:"Benchmark comparatif Make / Zapier / n8n rédigé dans Notion avec recommandation claire, argumentée et contextualisée. Scénario Make 1 : quand une équipe est complète (≥5 joueurs) → mise à jour statut Airtable + email responsable (nom équipe + compétition) + événement Google Calendar. Notion mis à jour.",
+        conditions:"Benchmark : 6 critères minimum (prise en main, lisibilité scénarios, règles métier complexes, mode de déploiement, maîtrise des coûts, intégration Google). Recommandation : expliquer pourquoi l'outil choisi EST le meilleur ET pourquoi les autres ne conviennent pas dans ce contexte précis. Scénario : lisible et compréhensible par une autre personne de l'équipe.",
+        realise:"Benchmark réalisé dans Notion → Make recommandé (lisibilité visuelle des scénarios, intégration Google native sans connecteur tiers, coûts maîtrisés, scalabilité sans remise à plat). Scénario 1 Make construit et testé : trigger Airtable (équipe complète) → update statut Airtable → email Gmail → event Google Calendar. Blueprint JSON exporté. Scénario documenté (objectif, déclencheur, résultat attendu, limites observées).",
+        milestone:null
+      }
+    ]
+  },
+  {
+    sprint:"Sprint 3 — Semaines 5 & 6 · Clôture Ops + lancement TerrainLink",
+    sems:[
+      {
+        title:"Semaine 5 — Automatiser la préparation d'une compétition",
+        projet:"p1", statut:"done",
+        tools:["Make","Airtable","Gmail","Google Docs","Notion"],
+        attendu:"Scénario Make 2 : déclencheur = statut 'Inscriptions clôturées' dans Airtable → génération automatique d'une fiche compétition (Google Doc) + envoi email aux équipes Opérations. Anticipation des cas incomplets/incohérents. Traçabilité de l'exécution visible pour les Ops. Section 'Sécurité des automatisations & intégrations Make' dans Notion. Document de passation opérationnelle pour le Responsable des Opérations.",
+        conditions:"Fiche compétition minimum : nom, dates, ville/zone, nombre d'équipes inscrites, brief opérationnel synthétique. Comportement défini si données manquantes ou incohérentes (aucune automatisation ne doit échouer sans laisser de trace). Indicateur de statut + date dernière exécution + visibilité en cas de problème. Page Sécurité : liste scénarios, données manipulées par scénario, risques identifiés, mesures de limitation.",
+        realise:"Scénario 2 Make fonctionnel : trigger Airtable (statut Inscriptions clôturées) → Text Aggregator (agrégation données + brief synthétique, sans appel API IA — choix documenté et argumenté) → Google Doc généré → email Gmail Ops. Page Sécurité Make complète : inventaire données par scénario, tableaux risques par sévérité, procédure incident (<1h désactivation, <72h déclaration CNIL si fuite avérée). Document de passation opérationnelle rédigé pour Jérôme.",
+        milestone:"end-p1"
+      },
+      {
+        title:"Semaine 6 — Design System Figma + lancement TerrainLink",
+        projet:"p2", statut:"done",
+        tools:["Figma","Notion"],
+        attendu:"Fichier Figma structuré : page Design System (4 couleurs exactement, 2 polices + hiérarchie, composants UI : bouton principal, bouton secondaire, champ formulaire, carte terrain/réservation) + page Écrans clés (2–3 écrans max illustrant le parcours principal TerrainLink). Documentation des choix visuels et règles d'usage. Notion mis à jour.",
+        conditions:"Couleurs : 1 principale (identité produit), 1 secondaire, 1 neutre (fond/texte), 1 CTA. Composants simples, cohérents, réutilisables. Cas d'usage de référence : joueur → voir terrains → choisir créneau → comprendre coût total et répartition des frais. Écrans servent de support pour la démo Lovable S7.",
+        realise:"Design System Figma créé. Palette officielle confirmée : Violet #6D4AFF (principal / logo PlayOff), Bleu #4FA3FF (secondaire), Vert #22C55E (CTA), fond neutre. Typographies : Poppins SemiBold (titres) / Inter Regular (corps). Composants UI créés. 3 écrans TerrainLink : sélection terrain, choix du créneau, récapitulatif réservation + répartition frais (paiement unique payeur autorisé, montant de remboursement affiché aux autres joueurs).",
+        milestone:"start-p2"
+      }
+    ]
+  },
+  {
+    sprint:"Sprint 4 — Semaines 7 & 8 · Démo Lovable et structure BDD",
+    sems:[
+      {
+        title:"Semaine 7 — Démo cliquable Lovable",
+        projet:"p2", statut:"partial",
+        tools:["Lovable","Figma","Notion"],
+        attendu:"Démo Lovable cliquable (lien public), fonctionnelle en condition de démonstration orale. Documentation produit (intention, périmètre couvert, ce qui est volontairement simulé). Liste d'écrans pour la future implémentation Bubble. Prompt principal sauvegardé dans une page Notion dédiée. Notion mis à jour (Backlog, Roadmap, Sprint Review).",
+        conditions:"Écrans Figma exportés (PNG/PDF) et inclus explicitement dans le prompt Lovable comme inspiration visuelle. 2–3 écrans maximum, sans BDD réelle. Modifications directes dans le code ou l'interface visuelle sans passer par le prompting (économie de crédits). Écran création de compte traité de manière fictive (aucune authentification réelle). Prompt : contexte produit + parcours + périmètre simulé + optimisation crédits.",
+        realise:"Démo Lovable construite et déployée. Écran 1 (sélection terrain) et Écran 2 (sélection du jour) fonctionnels et cliquables. Écran 3 (grille de créneaux horaires) : sélection du jour fonctionne et affiche la grille, mais le clic sur un créneau ne déclenche pas de transition vers le récapitulatif → non résolu en fin de session (diagnostic : problème non-code, lag build/deploy Lovable). Prompt sauvegardé dans Notion. Documentation produit rédigée. Limitation Lovable documentée et argumentable (2 écrans sur 3 pleinement fonctionnels).",
+        milestone:null
+      },
+      {
+        title:"Semaine 8 — Schéma BDD relationnelle",
+        projet:"p2", statut:"done",
+        tools:["Notion","Figma (outil de schéma)"],
+        attendu:"Schéma BDD relationnelle (outil libre : Whimsical, Canva, FigJam…) présentant les objets principaux, les relations (1-N, N-N), les statuts portés par chaque objet pertinent, et les dépendances critiques entre objets. Documentation des permissions pour chaque rôle utilisateur dans Notion (modifications de statut et leurs conséquences).",
+        conditions:"9 objets minimum identifiés dans le brief : User, Terrain, Créneau, Session, Réservation, Participation, Avis, Paiement, Notification. Pas d'implémentation Airtable ou Bubble requise à ce stade. Démontrer la compréhension du modèle produit. 4 rôles minimum avec permissions définies (qui peut voir/créer/modifier quoi).",
+        realise:"Schéma BDD 9 objets modélisé et documenté : User, Terrain, Créneau, Réservation, Session, Participation, Avis, Paiement, Notification. Relations 1-N et N-N définies. Statuts définis pour chaque objet pertinent. Dépendances critiques documentées (ex : Réservation dépend de Session complète). Matrice permissions 4 rôles (Joueur, Organisateur, Propriétaire terrain, Admin) en tableau couleur dans Notion. Dictionnaire de données exporté en Word. Diagramme ERD généré.",
+        milestone:null
+      }
+    ]
+  },
+  {
+    sprint:"Sprint 5 — Semaines 9 & 10 · Stack technique et implémentation MVP",
+    sems:[
+      {
+        title:"Semaine 9 — Définir la stack technique",
+        projet:"p2", statut:"todo",
+        tools:["Notion","Bubble","Airtable (optionnel)","Make (optionnel)"],
+        attendu:"Page Notion dédiée (distincte du backlog et de la roadmap) répondant aux 5 questions structurantes : où se situe la source de vérité des données, quels outils sont exposés aux utilisateurs finaux, quels outils sont réservés à l'usage interne PlayOff, où est implémentée la logique métier principale, quelles limites techniques sont anticipées avec cette stack.",
+        conditions:"Développement impératif sous Bubble. Liberté sur la BDD (full Bubble / full Airtable / les deux) et les workflows (full Bubble / full Make / les deux). Justification du choix obligatoire avec compréhension des limites et opportunités futures. Ce document sert de référence directe lors de l'implémentation technique.",
+        realise:"À faire. Matière disponible pour argumenter : schéma BDD S8 (9 objets, structure claire) → base pour décision Bubble vs Airtable. Automatisations Make déjà en place côté Ops → argument pour conserver Make pour les workflows transverses. Stack probable à documenter : Bubble (front + logique métier) + Airtable (référentiel Ops) + Make (automatisations inter-systèmes).",
+        milestone:null
+      },
+      {
+        title:"Semaine 10 — Implémentation technique MVP",
+        projet:"p2", statut:"todo",
+        tools:["Bubble","Airtable (optionnel)","Make (optionnel)"],
+        attendu:"Application Bubble avec 4 pages minimum : connexion/inscription, liste des terrains avec pop-up de réservation, page création de session, page de réservation. Parcours principal fonctionnel de bout en bout sans blocage majeur ni incohérence fonctionnelle.",
+        conditions:"S'appuyer exclusivement sur le cas d'usage validé (S6), le schéma BDD défini en S8, la stack technique arrêtée en S9. MVP stable et démontrable : un utilisateur doit pouvoir accéder → comprendre → effectuer une réservation de terrain de bout en bout. Pas d'application parfaite ou 'finie' attendue.",
+        realise:"À faire. C'est le livrable technique central de la soutenance — celui sur lequel le jury s'attardera le plus. À prioriser en urgence. Matière de départ : schéma BDD 9 objets (S8), 3 écrans Figma (S6), démo Lovable partielle (S7) comme référence de parcours.",
+        milestone:null
+      }
+    ]
+  },
+  {
+    sprint:"Sprint 6 — Semaines 11 & 12 · Finalisation et soutenance",
+    sems:[
+      {
+        title:"Semaine 11 — Sécurisation, finalisation et documentation",
+        projet:"p2", statut:"todo",
+        tools:["Bubble","Notion"],
+        attendu:"MVP vérifié : complétude du parcours principal, robustesse des workflows critiques, privacy rules Bubble correctement définies, données sensibles non exposées, statuts lisibles. Page Notion 'Sécurité – Sauvegarde, audit et gestion des incidents' comprenant : principes de sauvegarde et récupération des données, analyse des principaux risques de sécurité sur le périmètre MVP, plan d'action incidents (fuite de données, erreur critique, indisponibilité du service).",
+        conditions:"Application maîtrisée, pas parfaite. Limites du MVP identifiées et documentées. Actions critiques restreintes aux bons rôles. Fonctionnalités volontairement non traitées explicitées. Pistes d'amélioration ou d'évolution proposées. Documentation permettant à quelqu'un d'autre de comprendre et utiliser l'application.",
+        realise:"À faire. Base disponible : page Sécurité Make déjà en place (S5, Projet 1) → à compléter avec le volet Bubble : privacy rules implémentées, sauvegarde native Bubble (snapshots), plan d'incidents adapté à TerrainLink. Matière partielle disponible pour les risques RGPD (contacts, données personnelles joueurs).",
+        milestone:null
+      },
+      {
+        title:"Semaine 12 — Finalisation et préparation soutenance",
+        projet:"p2", statut:"todo",
+        tools:["Bubble","Notion","Figma","Lovable"],
+        attendu:"Finalisation de tous les livrables des 2 projets. Préparation de la soutenance orale : discours clair navigant entre vision produit (pour des décideurs non techniques) et niveau de détail technique suffisant (pour jury expert Airtable / Make / Bubble). Capacité à expliquer les choix, les arbitrages, les limites et les évolutions possibles.",
+        conditions:"MVP compréhensible et utilisable sans explication orale. Parcours principal sans blocage majeur. Limites assumées et explicables. Documentation permettant à quelqu'un d'autre de s'y retrouver. Capacité à défendre chaque choix technique devant des experts.",
+        realise:"À faire. Points clés à préparer pour l'oral : (1) Pourquoi Make et pas Zapier/n8n — contexte PlayOff, (2) Logique du schéma BDD 9 objets et dépendances, (3) Pourquoi le paiement est unique et non multi-parties pour TerrainLink, (4) Ce qui est dans le MVP et ce qui en est volontairement exclu, (5) Évolutions réalistes post-MVP.",
+        milestone:null
+      }
+    ]
+  }
+];
+
+const bclass={done:"b-done",partial:"b-partial",todo:"b-todo"};
+const blabel={done:"✓ Fait",partial:"⚡ Partiel",todo:"À faire"};
+const ptagHtml={p1:'<span class="proj-tag tag-p1">Projet 1 — Ops</span>',p2:'<span class="proj-tag tag-p2">Projet 2 — TerrainLink</span>'};
+
+function toolClass(p,name){
+  const isOpt=name.includes('optionnel');
+  const base=p==='p1'?'st1':'st2';
+  return `s-tool ${base}${isOpt?' st-opt':''}`;
+}
+
+const container=document.getElementById('sprints');
+data.forEach((sp,si)=>{
+  const block=document.createElement('div');
+  block.className='sprint-block';
+
+  const hd=document.createElement('div');
+  hd.className='sprint-head';
+  hd.innerHTML=`<h3>${sp.sprint}</h3><span class="chevron" id="chev-${si}">▾</span>`;
+
+  const body=document.createElement('div');
+  body.className='sprint-body';
+  body.id=`body-${si}`;
+
+  sp.sems.forEach(sem=>{
+    const row=document.createElement('div');
+    row.className='sem-row';
+    const fc=sem.projet==='p1'?'col-fait-p1':'col-fait-p2';
+
+    let msHtml='';
+    if(sem.milestone==='end-p1') msHtml='<div class="milestone ms-end">✅ Fin Projet 1 — Passation opérationnelle effectuée</div>';
+    if(sem.milestone==='start-p2') msHtml='<div class="milestone ms-start">🟣 Début Projet 2 — TerrainLink lancé</div>';
+
+    const toolsHtml=sem.tools.map(t=>`<span class="${toolClass(sem.projet,t)}">${t}</span>`).join('');
+
+    row.innerHTML=`
+      <div class="sem-title">${sem.title}</div>
+      <div class="row-top">
+        ${ptagHtml[sem.projet]}
+        <span class="badge ${bclass[sem.statut]}">${blabel[sem.statut]}</span>
+      </div>
+      <div class="sem-tools">${toolsHtml}</div>
+      ${msHtml}
+      <div class="cols">
+        <div><div class="col-head">Ce qui était attendu</div><div class="col-body">${sem.attendu}</div></div>
+        <div><div class="col-head">Conditions / limites</div><div class="col-body">${sem.conditions}</div></div>
+        <div><div class="col-head">Ce qui a été fait</div><div class="col-body ${fc}">${sem.realise}</div></div>
+      </div>`;
+    body.appendChild(row);
+  });
+
+  hd.addEventListener('click',()=>{
+    const open=body.classList.toggle('open');
+    document.getElementById(`chev-${si}`).style.transform=open?'rotate(180deg)':'';
+  });
+
+  block.appendChild(hd);
+  block.appendChild(body);
+  container.appendChild(block);
+});
+
+document.getElementById('body-0').classList.add('open');
+document.getElementById('chev-0').style.transform='rotate(180deg)';
+</script>
+</body>
+</html>
