@@ -8,13 +8,25 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
 .header{background:#1B2A4A;color:#fff;padding:0 2rem;display:flex;align-items:center;gap:1rem;height:56px}
-.header .logo{font-size:16px;font-weight:700}
-.header .logo span{color:#E8511A}
-.header .nav-back{font-size:12px;opacity:0.6;margin-left:auto;text-decoration:none;color:#fff}
-.header .nav-back:hover{opacity:1}
+.logo{font-size:16px;font-weight:700}.logo span{color:#E8511A}
+.nav-back{font-size:12px;opacity:0.6;margin-left:auto;text-decoration:none;color:#fff}
+.nav-back:hover{opacity:1}
 .main{max-width:1100px;margin:0 auto;padding:2rem}
 .page-title{font-size:22px;font-weight:600;color:#1B2A4A;margin-bottom:4px}
 .page-sub{font-size:13px;color:#777;margin-bottom:1.5rem}
+
+/* Setup panel */
+.setup-panel{background:#fff;border-radius:12px;border:2px solid #E8511A;padding:24px;margin-bottom:1.5rem;display:none}
+.setup-panel h3{font-size:14px;font-weight:700;color:#1B2A4A;margin-bottom:4px}
+.setup-panel p{font-size:12px;color:#888;margin-bottom:14px}
+.setup-fields{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.field-group label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:5px}
+.field-group input{width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:12px;outline:none}
+.field-group input:focus{border-color:#1B2A4A}
+.btn-connect{padding:9px 18px;background:#1B2A4A;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn-connect:hover{background:#142036}
+.setup-note{font-size:11px;color:#aaa;margin-top:8px}
+
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
 .stat-card{background:#fff;border-radius:10px;padding:16px 18px;border:1px solid #e8e6e0}
 .stat-card .label{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
@@ -27,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .filter-btn.active{background:#1B2A4A;color:#fff;border-color:#1B2A4A}
 .search-input{padding:6px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:12px;color:#333;outline:none;min-width:200px}
 .search-input:focus{border-color:#1B2A4A}
-.comps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.comps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 .comp-card{background:#fff;border-radius:12px;border:1px solid #e8e6e0;overflow:hidden;transition:box-shadow 0.15s;cursor:pointer}
 .comp-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08)}
 .comp-card.selected{border:2px solid #1B2A4A}
@@ -42,22 +54,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .s-termine{background:#e2e3e5;color:#383d41}
 .comp-body{padding:12px 16px}
 .comp-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
-.meta-item{font-size:11px;color:#666;display:flex;align-items:center;gap:4px}
+.meta-item{font-size:11px;color:#666}
 .comp-progress{margin-bottom:10px}
 .progress-label{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:4px}
 .progress-bar{height:5px;background:#f0eeea;border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;background:#1B2A4A;border-radius:3px;transition:width 0.3s}
-.comp-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid #f0eeea;margin-top:2px}
+.progress-fill{height:100%;background:#1B2A4A;border-radius:3px}
+.comp-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid #f0eeea}
 .prep-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
 .prep-ok{background:#d4edda;color:#155724}
 .prep-non{background:#f8d7da;color:#721c24}
-.btn-detail{font-size:11px;color:#1B2A4A;font-weight:600;text-decoration:none;border:none;background:none;cursor:pointer;padding:3px 0}
+.btn-detail{font-size:11px;color:#1B2A4A;font-weight:600;border:none;background:none;cursor:pointer}
 .btn-detail:hover{text-decoration:underline}
 .detail-panel{background:#fff;border-radius:12px;border:1px solid #e8e6e0;margin-top:1.5rem;overflow:hidden;display:none}
 .detail-panel.open{display:block}
 .detail-head{background:#1B2A4A;color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
 .detail-head h2{font-size:15px;font-weight:600}
-.detail-head .close-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.close-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px}
 .detail-body{padding:20px}
 .detail-section{margin-bottom:20px}
 .detail-section h3{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px}
@@ -68,19 +80,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .equipe-statut{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
 .eq-complete{background:#d4edda;color:#155724}
 .eq-incomplete{background:#fff3cd;color:#856404}
-.eq-validee{background:#cce5ff;color:#004085}
-.btn-make{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#E8511A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.15s}
+.btn-make{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#E8511A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
 .btn-make:hover{background:#d44616}
-.btn-make:disabled{background:#ccc;cursor:not-allowed}
 .action-note{font-size:11px;color:#aaa;margin-top:6px}
 .loading{text-align:center;padding:3rem;color:#aaa;font-size:13px}
 .empty{text-align:center;padding:3rem;color:#aaa;font-size:13px}
-.error-msg{background:#f8d7da;color:#721c24;padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:1rem}
-.toast{position:fixed;bottom:24px;right:24px;background:#1B2A4A;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;z-index:999}
+.toast{position:fixed;bottom:24px;right:24px;background:#1B2A4A;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.success{background:#155724}
-.toast.error{background:#721c24}
-@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.comps-grid{grid-template-columns:1fr}.main{padding:1rem}}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.comps-grid{grid-template-columns:1fr}.setup-fields{grid-template-columns:1fr}.main{padding:1rem}}
 </style>
 </head>
 <body>
@@ -90,14 +98,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 </div>
 <div class="main">
   <h1 class="page-title">Tableau de bord Projet 1</h1>
-  <p class="page-sub">Gestion des compétitions — données en temps réel depuis Airtable</p>
-  <div id="error-zone"></div>
+  <p class="page-sub">Compétitions PlayOff Amateurs — données en temps réel depuis Airtable</p>
+
+  <!-- Panel de connexion -->
+  <div class="setup-panel" id="setup-panel">
+    <h3>🔑 Connexion Airtable requise</h3>
+    <p>Renseigne ton token Airtable pour afficher les données en temps réel. Ces informations restent dans ton navigateur uniquement.</p>
+    <div class="setup-fields">
+      <div class="field-group">
+        <label>Personal Access Token (pat...)</label>
+        <input type="password" id="input-token" placeholder="patXXXXXXXXXXXXXX" />
+      </div>
+      <div class="field-group">
+        <label>Base ID (app...)</label>
+        <input type="text" id="input-base" placeholder="appXXXXXXXXXXXXXX" value="appk3ibcTEHYCJXtz" />
+      </div>
+      <button class="btn-connect" onclick="connectAirtable()">Connecter</button>
+    </div>
+    <div class="setup-note">Le token n'est pas envoyé à un serveur — il appelle Airtable directement depuis ton navigateur.</div>
+  </div>
+
   <div class="stats">
     <div class="stat-card"><div class="label">Total compétitions</div><div class="value" id="stat-total">—</div><div class="hint">toutes saisons</div></div>
     <div class="stat-card"><div class="label">En cours</div><div class="value" id="stat-encours" style="color:#004085">—</div><div class="hint">statut actif</div></div>
     <div class="stat-card"><div class="label">Inscriptions ouvertes</div><div class="value" id="stat-ouvert" style="color:#155724">—</div><div class="hint">acceptent des équipes</div></div>
     <div class="stat-card"><div class="label">Fiches préparées</div><div class="value" id="stat-prep" style="color:#E8511A">—</div><div class="hint">scénario Make exécuté</div></div>
   </div>
+
   <div class="filters">
     <span class="label">Filtrer :</span>
     <button class="filter-btn active" onclick="setFilter('tous',event)">Toutes</button>
@@ -107,7 +134,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     <button class="filter-btn" onclick="setFilter('Terminée',event)">Terminées</button>
     <input class="search-input" type="text" placeholder="Rechercher..." id="search-input" oninput="applyFilters()">
   </div>
-  <div id="comps-grid" class="comps-grid"><div class="loading">Chargement des compétitions...</div></div>
+
+  <div id="comps-grid" class="comps-grid"><div class="loading">Chargement...</div></div>
+
   <div class="detail-panel" id="detail-panel">
     <div class="detail-head"><h2 id="detail-nom">Compétition</h2><button class="close-btn" onclick="closeDetail()">✕</button></div>
     <div class="detail-body">
@@ -115,39 +144,138 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <div class="detail-section"><h3>Équipes inscrites</h3><div id="detail-equipes"><div class="loading">Chargement...</div></div></div>
       <div class="detail-section">
         <h3>Action Make — Scénario 2</h3>
-        <button class="btn-make" id="btn-make" onclick="declencherMake()">⚡ Clôturer et générer la fiche compétition</button>
-        <div class="action-note" id="make-note">Déclenche le scénario Make : fiche compétition Google Doc + email Ops</div>
+        <button class="btn-make" id="btn-make" onclick="showToast(\"✓ Make se déclenchera sur le changement de statut\",\"success\")">⚡ Clôturer et générer la fiche compétition</button>
+        <div class="action-note">Déclenche le scénario Make : statut → Inscriptions clôturées → fiche Google Doc → email Ops</div>
       </div>
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
 <script>
-let allComps=[],currentFilter='tous',selectedComp=null;
-const statutClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
+let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null;
+const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY';
+const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
+
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;setTimeout(()=>t.className='toast',3000)}
+
+function connectAirtable(){
+  TOKEN=document.getElementById('input-token').value.trim();
+  BASE_ID=document.getElementById('input-base').value.trim()||'appk3ibcTEHYCJXtz';
+  if(!TOKEN){showToast('Entre ton token Airtable');return}
+  sessionStorage.setItem('at_token',TOKEN);
+  sessionStorage.setItem('at_base',BASE_ID);
+  document.getElementById('setup-panel').style.display='none';
+  loadCompetitions();
+}
+
 function setFilter(f,e){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');applyFilters()}
-function applyFilters(){const q=document.getElementById('search-input').value.toLowerCase();let f=allComps;if(currentFilter!=='tous')f=f.filter(c=>c.statut===currentFilter);if(q)f=f.filter(c=>c.nom.toLowerCase().includes(q)||(c.ville||'').toLowerCase().includes(q));renderGrid(f)}
-function renderGrid(comps){const grid=document.getElementById('comps-grid');if(!comps.length){grid.innerHTML='<div class="empty">Aucune compétition trouvée.</div>';return}
-grid.innerHTML=comps.map(c=>{const nb=c.equipes?c.equipes.length:0;const sc=statutClass[c.statut]||'s-brouillon';const d=c.dateDebut?new Date(c.dateDebut).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}):'—';const pct=Math.min(100,nb*10);const sel=selectedComp&&selectedComp.id===c.id;
-return`<div class="comp-card${sel?' selected':''}" onclick="openDetail('${c.id}')"><div class="comp-head"><div><div class="comp-name">${c.nom||'(sans nom)'}</div><div class="comp-discipline">${c.discipline||''} ${c.ville?'· '+c.ville:''}</div></div><span class="statut-badge ${sc}">${c.statut}</span></div><div class="comp-body"><div class="comp-meta"><div class="meta-item">📅 ${d}</div><div class="meta-item">👥 ${nb} équipe${nb>1?'s':''}</div></div><div class="comp-progress"><div class="progress-label"><span>Équipes</span><span>${nb}/10</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div><div class="comp-footer"><span class="prep-badge ${c.preparationEnvoyee?'prep-ok':'prep-non'}">${c.preparationEnvoyee?'✓ Fiche générée':'✗ Non générée'}</span><button class="btn-detail">Voir →</button></div></div></div>`;}).join('')}
-function updateStats(comps){document.getElementById('stat-total').textContent=comps.length;document.getElementById('stat-encours').textContent=comps.filter(c=>c.statut==='En cours').length;document.getElementById('stat-ouvert').textContent=comps.filter(c=>c.statut==='Ouverte aux inscriptions').length;document.getElementById('stat-prep').textContent=comps.filter(c=>c.preparationEnvoyee).length}
-async function openDetail(id){selectedComp=allComps.find(c=>c.id===id);if(!selectedComp)return;applyFilters();const panel=document.getElementById('detail-panel');panel.classList.add('open');document.getElementById('detail-nom').textContent=selectedComp.nom;const sc=statutClass[selectedComp.statut]||'s-brouillon';
-document.getElementById('detail-infos').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px"><div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">STATUT</strong><span class="statut-badge ${sc}">${selectedComp.statut}</span></div><div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">DISCIPLINE</strong>${selectedComp.discipline||'—'}</div><div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">VILLE</strong>${selectedComp.ville||'—'}</div><div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">DATE DÉBUT</strong>${selectedComp.dateDebut?new Date(selectedComp.dateDebut).toLocaleDateString('fr-FR'):'—'}</div>${selectedComp.lienFiche?`<div style="grid-column:1/-1"><a href="${selectedComp.lienFiche}" target="_blank" style="color:#1B2A4A;font-size:12px">📄 Voir la fiche compétition</a></div>`:''}</div>`;
-const btn=document.getElementById('btn-make');const note=document.getElementById('make-note');
-if(selectedComp.preparationEnvoyee){btn.disabled=true;btn.textContent='✓ Fiche déjà générée';note.textContent='Le scénario Make a déjà été exécuté pour cette compétition.'}
-else{btn.disabled=false;btn.textContent='⚡ Clôturer et générer la fiche compétition';note.textContent='Déclenche le scénario Make : statut → Inscriptions clôturées → fiche Google Doc → email Ops'}
-document.getElementById('detail-equipes').innerHTML='<div class="loading">Chargement...</div>';panel.scrollIntoView({behavior:'smooth',block:'start'});
-try{const resp=await fetch(`/manager/api/equipes?competitionId=${id}`);const data=await resp.json();
-if(!data.equipes||!data.equipes.length){document.getElementById('detail-equipes').innerHTML='<div class="empty">Aucune équipe inscrite.</div>';return}
-document.getElementById('detail-equipes').innerHTML=`<div class="equipes-list">${data.equipes.map(e=>{const complete=e.nbJoueurs>=5;const validee=e.inscriptionValidee&&e.inscriptionValidee.toLowerCase().includes('oui');const sc=validee?'eq-validee':complete?'eq-complete':'eq-incomplete';const label=validee?'Validée':complete?'Complète':'Incomplète';
-return`<div class="equipe-row"><div class="equipe-nom">${e.nom}</div><div class="equipe-joueurs">${e.nbJoueurs} joueur${e.nbJoueurs>1?'s':''}</div><span class="equipe-statut ${sc}">${label}</span></div>`}).join('')}</div>`}
-catch(err){document.getElementById('detail-equipes').innerHTML='<div class="empty">Erreur de chargement.</div>'}}
+
+function applyFilters(){
+  const q=document.getElementById('search-input').value.toLowerCase();
+  let f=allComps;
+  if(currentFilter!=='tous')f=f.filter(c=>c.statut===currentFilter);
+  if(q)f=f.filter(c=>c.nom.toLowerCase().includes(q)||(c.ville||'').toLowerCase().includes(q));
+  renderGrid(f);
+}
+
+function renderGrid(comps){
+  const grid=document.getElementById('comps-grid');
+  if(!comps.length){grid.innerHTML='<div class="empty">Aucune compétition trouvée.</div>';return}
+  grid.innerHTML=comps.map(c=>{
+    const nb=c.equipes?c.equipes.length:0;
+    const sc=sClass[c.statut]||'s-brouillon';
+    const d=c.dateDebut?new Date(c.dateDebut).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    const pct=Math.min(100,nb*10);
+    const sel=selectedComp&&selectedComp.id===c.id;
+    return`<div class="comp-card${sel?' selected':''}" onclick="openDetail('${c.id}')">
+      <div class="comp-head"><div><div class="comp-name">${c.nom||'(sans nom)'}</div><div class="comp-discipline">${c.discipline||''} ${c.ville?'· '+c.ville:''}</div></div><span class="statut-badge ${sc}">${c.statut}</span></div>
+      <div class="comp-body">
+        <div class="comp-meta"><div class="meta-item">📅 ${d}</div><div class="meta-item">👥 ${nb} équipe${nb>1?'s':''}</div></div>
+        <div class="comp-progress"><div class="progress-label"><span>Équipes</span><span>${nb}/10</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>
+        <div class="comp-footer"><span class="prep-badge ${c.preparationEnvoyee?'prep-ok':'prep-non'}">${c.preparationEnvoyee?'✓ Fiche générée':'✗ Non générée'}</span><button class="btn-detail">Voir →</button></div>
+      </div></div>`;
+  }).join('');
+}
+
+function updateStats(comps){
+  document.getElementById('stat-total').textContent=comps.length;
+  document.getElementById('stat-encours').textContent=comps.filter(c=>c.statut==='En cours').length;
+  document.getElementById('stat-ouvert').textContent=comps.filter(c=>c.statut==='Ouverte aux inscriptions').length;
+  document.getElementById('stat-prep').textContent=comps.filter(c=>c.preparationEnvoyee).length;
+}
+
+async function openDetail(id){
+  selectedComp=allComps.find(c=>c.id===id);
+  if(!selectedComp)return;
+  applyFilters();
+  const panel=document.getElementById('detail-panel');
+  panel.classList.add('open');
+  document.getElementById('detail-nom').textContent=selectedComp.nom;
+  const sc=sClass[selectedComp.statut]||'s-brouillon';
+  document.getElementById('detail-infos').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
+    <div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">STATUT</strong><span class="statut-badge ${sc}">${selectedComp.statut}</span></div>
+    <div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">DISCIPLINE</strong>${selectedComp.discipline||'—'}</div>
+    <div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">VILLE</strong>${selectedComp.ville||'—'}</div>
+    <div><strong style="color:#999;font-size:11px;display:block;margin-bottom:2px">DATE DÉBUT</strong>${selectedComp.dateDebut?new Date(selectedComp.dateDebut).toLocaleDateString('fr-FR'):'—'}</div>
+    ${selectedComp.lienFiche?`<div style="grid-column:1/-1"><a href="${selectedComp.lienFiche}" target="_blank" style="color:#1B2A4A;font-size:12px">📄 Voir la fiche compétition</a></div>`:''}
+  </div>`;
+  document.getElementById('detail-equipes').innerHTML='<div class="loading">Chargement...</div>';
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_EQ}`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    const data=await r.json();
+    const equipes=(data.records||[]).filter(e=>{
+      const liens=e.fields['Compétition_Lien']||[];
+      return liens.includes(id);
+    });
+    if(!equipes.length){document.getElementById('detail-equipes').innerHTML='<div class="empty">Aucune équipe inscrite.</div>';return}
+    document.getElementById('detail-equipes').innerHTML=`<div class="equipes-list">${equipes.map(e=>{
+      const nb=e.fields['Nombre_joueurs_par_equipe']||0;
+      const complete=nb>=5;
+      const sc=complete?'eq-complete':'eq-incomplete';
+      return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${complete?'Complète':'Incomplète'}</span></div>`;
+    }).join('')}</div>`;
+  }catch(err){document.getElementById('detail-equipes').innerHTML='<div class="empty">Erreur de chargement.</div>'}
+}
+
 function closeDetail(){selectedComp=null;document.getElementById('detail-panel').classList.remove('open');applyFilters()}
-function declencherMake(){showToast('✓ Make se déclenchera sur le changement de statut','success')}
-async function loadCompetitions(){try{const resp=await fetch('/manager/api/competitions');if(!resp.ok)throw new Error(`Erreur ${resp.status}`);const data=await resp.json();allComps=data.competitions||[];updateStats(allComps);applyFilters()}
-catch(err){document.getElementById('error-zone').innerHTML=`<div class="error-msg">⚠️ Impossible de charger les données. Vérifie les variables d'environnement AIRTABLE_TOKEN et AIRTABLE_BASE_ID dans Vercel.</div>`;document.getElementById('comps-grid').innerHTML=''}}
-loadCompetitions();
+
+async function loadCompetitions(){
+  document.getElementById('comps-grid').innerHTML='<div class="loading">Chargement des compétitions...</div>';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_COMP}?sort[0][field]=DateD%C3%A9but&sort[0][direction]=desc`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    if(!r.ok)throw new Error(`Erreur ${r.status}`);
+    const data=await r.json();
+    allComps=(data.records||[]).map(r=>({
+      id:r.id,
+      nom:r.fields['NomCompetition']||'',
+      statut:r.fields['Statut_competition']||'Brouillon',
+      discipline:r.fields['Disciplines']||'',
+      ville:r.fields['Villes/zone geographique']||'',
+      dateDebut:r.fields['DateDébut']||'',
+      dateFin:r.fields['DateFin']||'',
+      preparationEnvoyee:r.fields['Preparation_envoyee']||false,
+      lienFiche:r.fields['Lien_fiche_doc']||null,
+      equipes:r.fields['Equipe']||[]
+    }));
+    updateStats(allComps);
+    applyFilters();
+  }catch(err){
+    document.getElementById('comps-grid').innerHTML='<div class="empty">Erreur — vérifie ton token Airtable.</div>';
+    document.getElementById('setup-panel').style.display='block';
+  }
+}
+
+// Init
+window.addEventListener('load',()=>{
+  TOKEN=sessionStorage.getItem('at_token')||'';
+  BASE_ID=sessionStorage.getItem('at_base')||'appk3ibcTEHYCJXtz';
+  if(TOKEN){loadCompetitions()}
+  else{document.getElementById('setup-panel').style.display='block';document.getElementById('comps-grid').innerHTML=''}
+});
 </script>
 </body>
 </html>
