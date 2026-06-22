@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlayOff / TerrainLink — Projet Professionnel</title>
+<title>PlayOff / WePlay — Projet Professionnel</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
@@ -38,27 +38,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .projet-head{padding:20px 22px 14px;border-bottom:1px solid #f0eeea}
 .projet-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;margin-bottom:10px}
 .p1-badge{background:#EAF1FB;color:#185FA5}
-.p2-badge{background:#F0EBF8;color:#6D4AFF}
+.p2-badge{background:#F0EBF8;color:#8C3EF4}
 .projet-head h2{font-size:16px;font-weight:700;color:#1B2A4A;margin-bottom:4px}
 .projet-head p{font-size:12px;color:#888;line-height:1.5}
 .projet-body{padding:16px 22px}
 .projet-tools{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
 .tool-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
 .t1{background:#EAF1FB;color:#185FA5}
-.t2{background:#F0EBF8;color:#6D4AFF}
+.t2{background:#F0EBF8;color:#8C3EF4}
 .projet-statut{font-size:11px;color:#888;margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .statut-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 .dot-done{background:#28a745}
 .dot-cours{background:#ffc107}
 
 /* Liens outils */
-.outils-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:3rem}
+.outils-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:3rem}
 .outil-card{background:#fff;border-radius:12px;border:1px solid #e8e6e0;padding:20px;text-decoration:none;color:inherit;transition:all 0.2s;display:flex;flex-direction:column;gap:10px}
 .outil-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);border-color:#1B2A4A;transform:translateY(-2px)}
 .outil-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
 .icon-manager{background:#EAF1FB}
 .icon-suivi{background:#FFF3CD}
-.icon-dossier{background:#D4EDDA}
+.icon-figma{background:#F0EBF8}
+.icon-lovable{background:#FDE8E8}
+.outil-card.externe{border-style:dashed}
 .outil-label{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.06em}
 .outil-title{font-size:14px;font-weight:700;color:#1B2A4A;line-height:1.3}
 .outil-desc{font-size:12px;color:#888;line-height:1.5;flex:1}
@@ -80,7 +82,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   .hero h1{font-size:26px}
   .main{padding:1.5rem 1rem}
   .projets{grid-template-columns:1fr}
-  .outils-grid{grid-template-columns:1fr}
+  .outils-grid{grid-template-columns:1fr 1fr}
   .bubble-bloc{flex-direction:column;text-align:center}
   .header{padding:0 1.5rem}
 }
@@ -89,15 +91,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 <body>
 
 <div class="header">
-  <div class="logo">PLAY<span>OFF</span><span class="logo-sub">/ TerrainLink</span></div>
+  <div class="logo">PLAY<span>OFF</span><span class="logo-sub">/ WePlay</span></div>
 </div>
 
 <div class="hero">
   <div class="hero-tag">Bootcamp Product Builder No-Code — École Cube</div>
   <h1>Projet Professionnel<br><span>RNCP 39108</span></h1>
-  <div class="hero-desc">12 semaines de mission chez PlayOff Amateurs — structuration des données, automatisation des flux, et conception de TerrainLink, une nouvelle application de location de terrains entre amis.</div>
+  <div class="hero-desc">12 semaines de mission chez PlayOff Amateurs — structuration des données, automatisation des flux, et conception de WePlay, une nouvelle application de location de terrains entre amis.</div>
   <div class="hero-meta">
-    <div class="hero-meta-item"><strong>Sandrine Darrieu</strong> </div>
+    <div class="hero-meta-item"><strong>Sandrine Darrieu</strong> — CHIC OUF</div>
     <div class="hero-meta-item"><strong>Juin 2026</strong></div>
     <div class="hero-meta-item"><strong>2 projets</strong> · 7 outils · 12 semaines</div>
   </div>
@@ -129,7 +131,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     <div class="projet-card">
       <div class="projet-head">
         <span class="projet-badge p2-badge">Projet 2</span>
-        <h2>TerrainLink</h2>
+        <h2>WePlay</h2>
         <p>Concevoir et développer une application de location de terrains de sport entre amis.</p>
       </div>
       <div class="projet-body">
@@ -174,6 +176,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <div class="outil-desc">Dossier écrit Q1.1 à Q4.4 — réponses aux questions du référentiel, mis à jour au fil de la mission.</div>
       <div class="outil-cta">Lire le dossier</div>
     </a>
+    <a href="https://www.figma.com/design/XDPH6sF56nPtYSCk1A7Ggn/WePlay" target="_blank" class="outil-card externe">
+      <div class="outil-icon icon-figma">🎨</div>
+      <div>
+        <div class="outil-label">Projet 2 · Design</div>
+        <div class="outil-title">WePlay — Figma</div>
+      </div>
+      <div class="outil-desc">Design System WePlay — palette #8C3EF4, composants UI, 3 écrans clés maquettés (accueil, réservation, confirmation).</div>
+      <div class="outil-cta">Ouvrir Figma</div>
+    </a>
+    <a href="#lovable" class="outil-card externe" id="lovable-card">
+      <div class="outil-icon icon-lovable">⚡</div>
+      <div>
+        <div class="outil-label">Projet 2 · Prototype</div>
+        <div class="outil-title">WePlay — Lovable</div>
+      </div>
+      <div class="outil-desc">Démo cliquable WePlay sans BDD — parcours utilisateur : sélection terrain → réservation → confirmation. En cours de création.</div>
+      <div class="outil-cta" style="color:#aaa">Bientôt disponible</div>
+    </a>
   </div>
 
   <!-- Bubble -->
@@ -181,7 +201,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   <div class="bubble-bloc">
     <div class="bubble-icon">🫧</div>
     <div class="bubble-info">
-      <h3>TerrainLink — MVP Bubble</h3>
+      <h3>WePlay — MVP Bubble</h3>
       <p>Application de location de terrains entre amis. Parcours utilisateur : connexion → sélection terrain → réservation créneau → récapitulatif et répartition des frais. Stack : Bubble + Airtable + Make.</p>
       <span class="bubble-badge">⏳ Sprint 5–6 · En construction</span>
     </div>
@@ -191,7 +211,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 
 <div class="footer">
   <span>Sandrine Darrieu — CHIC OUF — Juin 2026</span>
-  <span>PlayOff Amateurs / TerrainLink · RNCP 39108 · École Cube</span>
+  <span>PlayOff Amateurs / WePlay · RNCP 39108 · École Cube</span>
 </div>
 
 </body>
