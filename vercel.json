@@ -1,9 +1,1 @@
-{
-  "rewrites": [
-    { "source": "/manager/api/competitions", "destination": "/manager/api/competitions.js" },
-    { "source": "/manager/api/equipes", "destination": "/manager/api/equipes.js" },
-    { "source": "/manager", "destination": "/manager/index.html" },
-    { "source": "/suivi", "destination": "/suivi/index.html" },
-    { "source": "/dossier", "destination": "/dossier/index.html" }
-  ]
-}
+{}
