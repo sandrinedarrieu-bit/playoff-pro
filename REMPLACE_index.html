@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayOff / WePlay — Projet Professionnel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
+
+/* Header */
+.header{background:#1B2A4A;padding:0 3rem;display:flex;align-items:center;height:64px;gap:16px}
+.logo{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.logo span{color:#E8511A}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-left:4px;font-weight:400}
+
+/* Hero */
+.hero{background:#1B2A4A;padding:60px 3rem 70px;color:#fff;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-60px;width:400px;height:400px;background:rgba(232,81,26,0.08);border-radius:50%}
+.hero-tag{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#E8511A;margin-bottom:14px}
+.hero h1{font-size:36px;font-weight:800;line-height:1.15;margin-bottom:12px;max-width:600px}
+.hero h1 span{color:#E8511A}
+.hero-desc{font-size:14px;opacity:0.7;max-width:520px;line-height:1.7;margin-bottom:28px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap}
+.hero-meta-item{font-size:12px;opacity:0.6;display:flex;align-items:center;gap:6px}
+.hero-meta-item strong{opacity:1;color:#fff}
+
+/* Main layout */
+.main{max-width:1000px;margin:0 auto;padding:3rem 2rem}
+
+/* Section titre */
+.section-label{font-size:11px;font-weight:700;color:#E8511A;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px}
+
+/* Projets */
+.projets{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:3rem}
+.projet-card{background:#fff;border-radius:14px;border:1px solid #e8e6e0;overflow:hidden;transition:box-shadow 0.2s}
+.projet-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.08)}
+.projet-head{padding:20px 22px 14px;border-bottom:1px solid #f0eeea}
+.projet-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;margin-bottom:10px}
+.p1-badge{background:#EAF1FB;color:#185FA5}
+.p2-badge{background:#F0EBF8;color:#8C3EF4}
+.projet-head h2{font-size:16px;font-weight:700;color:#1B2A4A;margin-bottom:4px}
+.projet-head p{font-size:12px;color:#888;line-height:1.5}
+.projet-body{padding:16px 22px}
+.projet-tools{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.tool-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
+.t1{background:#EAF1FB;color:#185FA5}
+.t2{background:#F0EBF8;color:#8C3EF4}
+.projet-statut{font-size:11px;color:#888;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.statut-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot-done{background:#28a745}
+.dot-cours{background:#ffc107}
+
+/* Liens outils */
+.outils-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:3rem}
+.outil-card{background:#fff;border-radius:12px;border:1px solid #e8e6e0;padding:20px;text-decoration:none;color:inherit;transition:all 0.2s;display:flex;flex-direction:column;gap:10px}
+.outil-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);border-color:#1B2A4A;transform:translateY(-2px)}
+.outil-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.icon-manager{background:#EAF1FB}
+.icon-suivi{background:#FFF3CD}
+.icon-figma{background:#F0EBF8}
+.icon-lovable{background:#FDE8E8}
+.outil-card.externe{border-style:dashed}
+.outil-label{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.06em}
+.outil-title{font-size:14px;font-weight:700;color:#1B2A4A;line-height:1.3}
+.outil-desc{font-size:12px;color:#888;line-height:1.5;flex:1}
+.outil-cta{font-size:11px;font-weight:700;color:#1B2A4A;display:flex;align-items:center;gap:4px}
+.outil-cta::after{content:'→'}
+
+/* Suivi de projet */
+.suivi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
+.suivi-card{background:#fff;border-radius:10px;border:1px solid #e8e6e0;padding:14px 16px;text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;transition:all 0.2s}
+.suivi-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.07);border-color:#1B2A4A;transform:translateY(-1px)}
+.suivi-icon{font-size:22px;flex-shrink:0}
+.suivi-info{flex:1}
+.suivi-title{font-size:13px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
+.suivi-desc{font-size:11px;color:#888;line-height:1.4}
+.suivi-cta{font-size:11px;font-weight:600;color:#aaa;white-space:nowrap}
+.suivi-card:hover .suivi-cta{color:#1B2A4A}
+
+/* Bubble bloc */
+.bubble-bloc{background:#fff;border-radius:14px;border:2px dashed #d0c8f0;padding:24px;display:flex;align-items:center;gap:20px}
+.bubble-icon{width:56px;height:56px;border-radius:14px;background:#F0EBF8;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.bubble-info h3{font-size:15px;font-weight:700;color:#1B2A4A;margin-bottom:4px}
+.bubble-info p{font-size:12px;color:#888;line-height:1.5}
+.bubble-badge{font-size:10px;font-weight:700;background:#fff3cd;color:#856404;padding:2px 8px;border-radius:10px;margin-top:6px;display:inline-block}
+
+/* Footer */
+.footer{border-top:1px solid #e8e6e0;padding:20px 3rem;font-size:11px;color:#aaa;display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto}
+
+@media(max-width:700px){
+  .hero{padding:40px 1.5rem 50px}
+  .hero h1{font-size:26px}
+  .main{padding:1.5rem 1rem}
+  .projets{grid-template-columns:1fr}
+  .suivi-grid{grid-template-columns:1fr 1fr}
+  .outils-grid{grid-template-columns:1fr 1fr}
+  .bubble-bloc{flex-direction:column;text-align:center}
+  .header{padding:0 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">PLAY<span>OFF</span><span class="logo-sub">/ WePlay</span></div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">Bootcamp Product Builder No-Code — École Cube</div>
+  <h1>Projet Professionnel<br><span>RNCP 39108</span></h1>
+  <div class="hero-desc">12 semaines de mission chez PlayOff Amateurs — structuration des données, automatisation des flux, et conception de WePlay, une nouvelle application de location de terrains entre amis.</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Sandrine Darrieu</strong> — CHIC OUF</div>
+    <div class="hero-meta-item"><strong>Juin 2026</strong></div>
+    <div class="hero-meta-item"><strong>2 projets</strong> · 7 outils · 12 semaines</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Les 2 projets -->
+  <div class="section-label">Les deux projets de mission</div>
+  <div class="projets">
+    <div class="projet-card">
+      <div class="projet-head">
+        <span class="projet-badge p1-badge">Projet 1</span>
+        <h2>Ops interne PlayOff</h2>
+        <p>Structurer et automatiser la gestion des compétitions sportives amateurs à l'échelle nationale.</p>
+      </div>
+      <div class="projet-body">
+        <div class="projet-tools">
+          <span class="tool-tag t1">Notion</span>
+          <span class="tool-tag t1">Airtable</span>
+          <span class="tool-tag t1">Make</span>
+          <span class="tool-tag t1">Gmail</span>
+          <span class="tool-tag t1">Google Docs</span>
+          <span class="tool-tag t1">Google Calendar</span>
+        </div>
+        <div class="projet-statut"><span class="statut-dot dot-done"></span>Semaines 1 à 5 · <strong>Terminé</strong></div>
+      </div>
+    </div>
+    <div class="projet-card">
+      <div class="projet-head">
+        <span class="projet-badge p2-badge">Projet 2</span>
+        <h2>WePlay</h2>
+        <p>Concevoir et développer une application de location de terrains de sport entre amis.</p>
+      </div>
+      <div class="projet-body">
+        <div class="projet-tools">
+          <span class="tool-tag t2">Notion</span>
+          <span class="tool-tag t2">Figma</span>
+          <span class="tool-tag t2">Lovable</span>
+          <span class="tool-tag t2">Bubble</span>
+        </div>
+        <div class="projet-statut"><span class="statut-dot dot-cours"></span>Semaines 6 à 12 · <strong>En cours</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Les 3 outils Vercel -->
+  <div class="section-label">Outils de démonstration</div>
+  <div class="outils-grid">
+    <a href="/manager" class="outil-card">
+      <div class="outil-icon icon-manager">📊</div>
+      <div>
+        <div class="outil-label">Projet 1 · Live</div>
+        <div class="outil-title">Dashboard PlayOff Manager</div>
+      </div>
+      <div class="outil-desc">Interface connectée à Airtable en temps réel — compétitions, équipes, statuts, déclenchement Make.</div>
+      <div class="outil-cta">Ouvrir le dashboard</div>
+    </a>
+    <a href="/suivi" class="outil-card">
+      <div class="outil-icon icon-suivi">🗓</div>
+      <div>
+        <div class="outil-label">Pilotage · 12 semaines</div>
+        <div class="outil-title">Suivi des sprints</div>
+      </div>
+      <div class="outil-desc">Tableau de bord des 12 semaines — attendus, conditions, statuts et livrables par semaine et par projet.</div>
+      <div class="outil-cta">Voir le suivi</div>
+    </a>
+    <a href="/dossier" class="outil-card">
+      <div class="outil-icon icon-dossier">📄</div>
+      <div>
+        <div class="outil-label">RNCP 39108 · Écrit</div>
+        <div class="outil-title">Dossier de soutenance</div>
+      </div>
+      <div class="outil-desc">Dossier écrit Q1.1 à Q4.4 — réponses aux questions du référentiel, mis à jour au fil de la mission.</div>
+      <div class="outil-cta">Lire le dossier</div>
+    </a>
+    <a href="https://www.figma.com/design/XDPH6sF56nPtYSCk1A7Ggn/WePlay" target="_blank" class="outil-card externe">
+      <div class="outil-icon icon-figma">🎨</div>
+      <div>
+        <div class="outil-label">Projet 2 · Design</div>
+        <div class="outil-title">WePlay — Figma</div>
+      </div>
+      <div class="outil-desc">Design System WePlay — palette #8C3EF4, composants UI, 3 écrans clés maquettés (accueil, réservation, confirmation).</div>
+      <div class="outil-cta">Ouvrir Figma</div>
+    </a>
+    <a href="https://weplay2.lovable.app" target="_blank" class="outil-card externe">
+      <div class="outil-icon icon-lovable">⚡</div>
+      <div>
+        <div class="outil-label">Projet 2 · Prototype</div>
+        <div class="outil-title">WePlay — Lovable</div>
+      </div>
+      <div class="outil-desc">Démo cliquable WePlay sans BDD — parcours utilisateur : sélection terrain → réservation → confirmation. 3 écrans interactifs.</div>
+      <div class="outil-cta">Ouvrir la démo</div>
+    </a>
+  </div>
+
+  <!-- Outils de suivi -->
+  <div class="section-label">Outils de suivi de projet</div>
+  <div class="suivi-grid">
+    <a href="https://flying-rest-f84.notion.site" target="_blank" class="suivi-card">
+      <div class="suivi-icon">🗺️</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Roadmap 12 semaines</div>
+        <div class="suivi-desc">6 sprints · objectifs, outils et nature du travail par sprint</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+    <a href="https://flying-rest-f84.notion.site" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📋</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Backlog produit</div>
+        <div class="suivi-desc">Problèmes, besoins et améliorations — priorisés par sprint</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+    <a href="https://flying-rest-f84.notion.site" target="_blank" class="suivi-card">
+      <div class="suivi-icon">🔄</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Sprint Reviews</div>
+        <div class="suivi-desc">Réalisations, décisions, arbitrages et risques — bi-hebdomadaires</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+    <a href="https://flying-rest-f84.notion.site" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📝</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Comptes-rendus (CR)</div>
+        <div class="suivi-desc">RM1 à RM11 · journal de mission et décisions techniques</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+  </div>
+
+  <!-- Bubble -->
+  <div class="section-label">Application en développement</div>
+  <div class="bubble-bloc">
+    <div class="bubble-icon">🫧</div>
+    <div class="bubble-info">
+      <h3>WePlay — MVP Bubble</h3>
+      <p>Application de location de terrains entre amis. Parcours utilisateur : connexion → sélection terrain → réservation créneau → récapitulatif et répartition des frais. Stack : Bubble + Airtable + Make.</p>
+      <span class="bubble-badge">⏳ Sprint 5–6 · En construction</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>Sandrine Darrieu — Juin 2026 · <a href="https://playoff-pro.vercel.app" target="_blank" style="color:#aaa">playoff-pro.vercel.app</a></span>
+  <span>PlayOff Amateurs / WePlay · RNCP 39108 · École Cube</span>
+</div>
+
+</body>
+</html>
