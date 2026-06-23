@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlayOff / TerrainLink — Suivi 2 projets</title>
+<title>PlayOff / WePlay — Suivi 2 projets</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;padding:1.5rem}
@@ -22,9 +22,9 @@ h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
 .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
 .proj-card{border-radius:10px;padding:14px 16px;border-left:4px solid}
 .pc1{background:#EAF1FB;border-color:#185FA5}
-.pc2{background:#F0EBF8;border-color:#6D4AFF}
+.pc2{background:#F0EBF8;border-color:#8C3EF4}
 .proj-card h2{font-size:13px;font-weight:600;margin-bottom:4px}
-.pc1 h2{color:#185FA5}.pc2 h2{color:#6D4AFF}
+.pc1 h2{color:#185FA5}.pc2 h2{color:#8C3EF4}
 .proj-card .sub{font-size:11px;color:#666;margin-bottom:8px}
 .tools-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .tool{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px}
@@ -64,7 +64,7 @@ h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
 .col-head{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:4px}
 .col-body{font-size:11.5px;color:#333;line-height:1.6}
 .col-fait-p1{border-left:3px solid #185FA5;padding-left:7px}
-.col-fait-p2{border-left:3px solid #6D4AFF;padding-left:7px}
+.col-fait-p2{border-left:3px solid #8C3EF4;padding-left:7px}
 
 /* Milestone */
 .milestone{font-size:11px;font-weight:600;margin-top:8px;padding:4px 8px;border-radius:5px;display:inline-block}
@@ -74,6 +74,10 @@ h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
 
 @media print{
   body{background:#fff;padding:0.5rem}
+  .top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px;margin-bottom:4px}
+  .btn-back{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;background:#1B2A4A;color:#fff;font-size:12px;font-weight:600;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
+  .btn-back:hover{background:#142036}
+  @media print{.top-bar{display:none}}
   .sprint-body{display:block!important}
   .chevron,.print-btn{display:none}
   .sprint-block{break-inside:avoid;margin-bottom:0.8rem}
@@ -87,7 +91,7 @@ h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
 </head>
 <body>
 
-<h1>PlayOff Amateurs / TerrainLink — Suivi 2 projets, 12 semaines</h1>
+<h1>PlayOff Amateurs / WePlay — Suivi 2 projets, 12 semaines</h1>
 <p class="meta">RNCP 39108 · Product Builder No-Code · École Cube · Bootcamp 2026</p>
 
 <button class="print-btn" onclick="window.print()">🖨 Imprimer / Exporter PDF</button>
@@ -117,7 +121,7 @@ h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
     </div>
   </div>
   <div class="proj-card pc2">
-    <h2>Projet 2 — TerrainLink</h2>
+    <h2>Projet 2 — WePlay</h2>
     <div class="sub">Semaines 6 à 12 · Sprints 3 (partiel) à 6 · Statut : ⚡ En cours</div>
     <div class="sub">Objectif : concevoir et développer l'app de location de terrains entre amis</div>
     <div class="tools-list">
@@ -132,6 +136,7 @@ h1{font-size:20px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
   </div>
 </div>
 
+<div class="top-bar"><a href="/" class="btn-back">← Accueil</a></div>
 <div id="sprints"></div>
 
 <script>
@@ -183,7 +188,7 @@ const data = [
     ]
   },
   {
-    sprint:"Sprint 3 — Semaines 5 & 6 · Clôture Ops + lancement TerrainLink",
+    sprint:"Sprint 3 — Semaines 5 & 6 · Clôture Ops + lancement WePlay",
     sems:[
       {
         title:"Semaine 5 — Automatiser la préparation d'une compétition",
@@ -195,12 +200,12 @@ const data = [
         milestone:"end-p1"
       },
       {
-        title:"Semaine 6 — Design System Figma + lancement TerrainLink",
+        title:"Semaine 6 — Design System Figma + lancement WePlay",
         projet:"p2", statut:"done",
         tools:["Figma","Notion"],
-        attendu:"Fichier Figma structuré : page Design System (4 couleurs exactement, 2 polices + hiérarchie, composants UI : bouton principal, bouton secondaire, champ formulaire, carte terrain/réservation) + page Écrans clés (2–3 écrans max illustrant le parcours principal TerrainLink). Documentation des choix visuels et règles d'usage. Notion mis à jour.",
+        attendu:"Fichier Figma structuré : page Design System (4 couleurs exactement, 2 polices + hiérarchie, composants UI : bouton principal, bouton secondaire, champ formulaire, carte terrain/réservation) + page Écrans clés (2–3 écrans max illustrant le parcours principal WePlay). Documentation des choix visuels et règles d'usage. Notion mis à jour.",
         conditions:"Couleurs : 1 principale (identité produit), 1 secondaire, 1 neutre (fond/texte), 1 CTA. Composants simples, cohérents, réutilisables. Cas d'usage de référence : joueur → voir terrains → choisir créneau → comprendre coût total et répartition des frais. Écrans servent de support pour la démo Lovable S7.",
-        realise:"Design System Figma créé. Palette officielle confirmée : Violet #6D4AFF (principal / logo PlayOff), Bleu #4FA3FF (secondaire), Vert #22C55E (CTA), fond neutre. Typographies : Poppins SemiBold (titres) / Inter Regular (corps). Composants UI créés. 3 écrans TerrainLink : sélection terrain, choix du créneau, récapitulatif réservation + répartition frais (paiement unique payeur autorisé, montant de remboursement affiché aux autres joueurs).",
+        realise:"Design System Figma créé. Palette officielle confirmée : Violet #8C3EF4 (principal / logo PlayOff), Bleu #FF8A00 (secondaire), Vert #FF8A00 (CTA), fond neutre. Typographies : Poppins SemiBold (titres) / Inter Regular (corps). Composants UI créés. 3 écrans WePlay : sélection terrain, choix du créneau, récapitulatif réservation + répartition frais (paiement unique payeur autorisé, montant de remboursement affiché aux autres joueurs).",
         milestone:"start-p2"
       }
     ]
@@ -210,7 +215,7 @@ const data = [
     sems:[
       {
         title:"Semaine 7 — Démo cliquable Lovable",
-        projet:"p2", statut:"partial",
+        projet:"p2", statut:"done",
         tools:["Lovable","Figma","Notion"],
         attendu:"Démo Lovable cliquable (lien public), fonctionnelle en condition de démonstration orale. Documentation produit (intention, périmètre couvert, ce qui est volontairement simulé). Liste d'écrans pour la future implémentation Bubble. Prompt principal sauvegardé dans une page Notion dédiée. Notion mis à jour (Backlog, Roadmap, Sprint Review).",
         conditions:"Écrans Figma exportés (PNG/PDF) et inclus explicitement dans le prompt Lovable comme inspiration visuelle. 2–3 écrans maximum, sans BDD réelle. Modifications directes dans le code ou l'interface visuelle sans passer par le prompting (économie de crédits). Écran création de compte traité de manière fictive (aucune authentification réelle). Prompt : contexte produit + parcours + périmètre simulé + optimisation crédits.",
@@ -260,7 +265,7 @@ const data = [
         tools:["Bubble","Notion"],
         attendu:"MVP vérifié : complétude du parcours principal, robustesse des workflows critiques, privacy rules Bubble correctement définies, données sensibles non exposées, statuts lisibles. Page Notion 'Sécurité – Sauvegarde, audit et gestion des incidents' comprenant : principes de sauvegarde et récupération des données, analyse des principaux risques de sécurité sur le périmètre MVP, plan d'action incidents (fuite de données, erreur critique, indisponibilité du service).",
         conditions:"Application maîtrisée, pas parfaite. Limites du MVP identifiées et documentées. Actions critiques restreintes aux bons rôles. Fonctionnalités volontairement non traitées explicitées. Pistes d'amélioration ou d'évolution proposées. Documentation permettant à quelqu'un d'autre de comprendre et utiliser l'application.",
-        realise:"À faire. Base disponible : page Sécurité Make déjà en place (S5, Projet 1) → à compléter avec le volet Bubble : privacy rules implémentées, sauvegarde native Bubble (snapshots), plan d'incidents adapté à TerrainLink. Matière partielle disponible pour les risques RGPD (contacts, données personnelles joueurs).",
+        realise:"À faire. Base disponible : page Sécurité Make déjà en place (S5, Projet 1) → à compléter avec le volet Bubble : privacy rules implémentées, sauvegarde native Bubble (snapshots), plan d'incidents adapté à WePlay. Matière partielle disponible pour les risques RGPD (contacts, données personnelles joueurs).",
         milestone:null
       },
       {
@@ -269,7 +274,7 @@ const data = [
         tools:["Bubble","Notion","Figma","Lovable"],
         attendu:"Finalisation de tous les livrables des 2 projets. Préparation de la soutenance orale : discours clair navigant entre vision produit (pour des décideurs non techniques) et niveau de détail technique suffisant (pour jury expert Airtable / Make / Bubble). Capacité à expliquer les choix, les arbitrages, les limites et les évolutions possibles.",
         conditions:"MVP compréhensible et utilisable sans explication orale. Parcours principal sans blocage majeur. Limites assumées et explicables. Documentation permettant à quelqu'un d'autre de s'y retrouver. Capacité à défendre chaque choix technique devant des experts.",
-        realise:"À faire. Points clés à préparer pour l'oral : (1) Pourquoi Make et pas Zapier/n8n — contexte PlayOff, (2) Logique du schéma BDD 9 objets et dépendances, (3) Pourquoi le paiement est unique et non multi-parties pour TerrainLink, (4) Ce qui est dans le MVP et ce qui en est volontairement exclu, (5) Évolutions réalistes post-MVP.",
+        realise:"À faire. Points clés à préparer pour l'oral : (1) Pourquoi Make et pas Zapier/n8n — contexte PlayOff, (2) Logique du schéma BDD 9 objets et dépendances, (3) Pourquoi le paiement est unique et non multi-parties pour WePlay, (4) Ce qui est dans le MVP et ce qui en est volontairement exclu, (5) Évolutions réalistes post-MVP.",
         milestone:null
       }
     ]
@@ -278,7 +283,7 @@ const data = [
 
 const bclass={done:"b-done",partial:"b-partial",todo:"b-todo"};
 const blabel={done:"✓ Fait",partial:"⚡ Partiel",todo:"À faire"};
-const ptagHtml={p1:'<span class="proj-tag tag-p1">Projet 1 — Ops</span>',p2:'<span class="proj-tag tag-p2">Projet 2 — TerrainLink</span>'};
+const ptagHtml={p1:'<span class="proj-tag tag-p1">Projet 1 — Ops</span>',p2:'<span class="proj-tag tag-p2">Projet 2 — WePlay</span>'};
 
 function toolClass(p,name){
   const isOpt=name.includes('optionnel');
@@ -306,7 +311,7 @@ data.forEach((sp,si)=>{
 
     let msHtml='';
     if(sem.milestone==='end-p1') msHtml='<div class="milestone ms-end">✅ Fin Projet 1 — Passation opérationnelle effectuée</div>';
-    if(sem.milestone==='start-p2') msHtml='<div class="milestone ms-start">🟣 Début Projet 2 — TerrainLink lancé</div>';
+    if(sem.milestone==='start-p2') msHtml='<div class="milestone ms-start">🟣 Début Projet 2 — WePlay lancé</div>';
 
     const toolsHtml=sem.tools.map(t=>`<span class="${toolClass(sem.projet,t)}">${t}</span>`).join('');
 
