@@ -61,7 +61,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .icon-figma{background:#F0EBF8}
 .icon-bubble{background:#EDE9FB}
 .icon-word{background:#E8F4E8}
-.icon-notion{background:#F0F0F0}
 .outil-card.externe{border-style:dashed}
 .outil-label{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.06em}
 .outil-title{font-size:14px;font-weight:700;color:#1B2A4A;line-height:1.3}
@@ -70,7 +69,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .outil-cta::after{content:'→'}
 
 /* Suivi de projet */
-.suivi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
+.suivi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
 .suivi-card{background:#fff;border-radius:10px;border:1px solid #e8e6e0;padding:14px 16px;text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;transition:all 0.2s}
 .suivi-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.07);border-color:#1B2A4A;transform:translateY(-1px)}
 .suivi-icon{font-size:22px;flex-shrink:0}
@@ -161,35 +160,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     </div>
   </div>
 
-  <!-- Les 3 outils Vercel -->
+  <!-- Les outils de démonstration -->
   <div class="section-label">Outils de démonstration</div>
   <div class="outils-grid">
     <a href="/manager" class="outil-card">
       <div class="outil-icon icon-manager">📊</div>
       <div>
         <div class="outil-label">Projet 1 · Live</div>
-        <div class="outil-title">Suivi des compétitions -  PlayOff</div>
+        <div class="outil-title">Suivi des compétitions — PlayOff</div>
       </div>
       <div class="outil-desc">Interface connectée à Airtable en temps réel — compétitions, équipes, statuts, déclenchement Make.</div>
       <div class="outil-cta">Ouvrir le dashboard</div>
-    </a>
-    <a href="/suivi" class="outil-card">
-      <div class="outil-icon icon-suivi">🗓</div>
-      <div>
-        <div class="outil-label">Pilotage · 12 semaines</div>
-        <div class="outil-title">Suivi des sprints</div>
-      </div>
-      <div class="outil-desc">Tableau de bord des 12 semaines — attendus, conditions, statuts et livrables par semaine et par projet.</div>
-      <div class="outil-cta">Voir le suivi</div>
-    </a>
-    <a href="/dossier" class="outil-card">
-      <div class="outil-icon icon-dossier">📄</div>
-      <div>
-        <div class="outil-label">RNCP 39108 · Écrit</div>
-        <div class="outil-title">Dossier de soutenance</div>
-      </div>
-      <div class="outil-desc">Dossier écrit Q1.1 à Q4.4 — réponses aux questions du référentiel, mis à jour au fil de la mission.</div>
-      <div class="outil-cta">Lire le dossier</div>
     </a>
     <a href="https://www.figma.com/design/XDPH6sF56nPtYSCk1A7Ggn/WePlay" target="_blank" class="outil-card externe">
       <div class="outil-icon icon-figma">🎨</div>
@@ -197,7 +178,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <div class="outil-label">Projet 2 · Design</div>
         <div class="outil-title">WePlay — Figma</div>
       </div>
-      <div class="outil-desc">Design System WePlay — palette #8C3EF4, composants UI, 5 écrans maquettés (Home, Recherche, Fiche terrain, Réservation, Profil).</div>
+      <div class="outil-desc">Design System WePlay — palette #8C3EF4, composants UI, écrans maquettés (Home, Recherche, Fiche terrain, Réservation, Profil).</div>
       <div class="outil-cta">Ouvrir Figma</div>
     </a>
     <a href="https://turf-tribe-now.lovable.app" target="_blank" class="outil-card externe">
@@ -206,7 +187,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <div class="outil-label">Projet 2 · Prototype</div>
         <div class="outil-title">WePlay — Lovable</div>
       </div>
-      <div class="outil-desc">Démo cliquable WePlay 5 écrans — Home, Recherche, Fiche terrain, Réservation, Profil. Palette #8C3EF4 · GitHub : sandrinedarrieu-bit/turf-tribe-now.</div>
+      <div class="outil-desc">Démo cliquable WePlay — Home, Recherche, Fiche terrain, Réservation, Profil. Palette #8C3EF4 · GitHub : sandrinedarrieu-bit/turf-tribe-now.</div>
       <div class="outil-cta">Ouvrir la démo</div>
     </a>
     <a href="https://bubble.io/page?id=weplay-14317&tab=Design&name=index" target="_blank" class="outil-card externe">
@@ -218,37 +199,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <div class="outil-desc">Application NoCode WePlay en cours de développement — connexion, liste terrains, création de session, réservation. Sprints 5–6.</div>
       <div class="outil-cta">Ouvrir Bubble</div>
     </a>
-    <a href="/downloads/PlayOff_Dossier_Q1_V2.docx" download class="outil-card">
-      <div class="outil-icon icon-word">📄</div>
-      <div>
-        <div class="outil-label">Soutenance · Bloc 1</div>
-        <div class="outil-title">Dossier Q1 — Word</div>
-      </div>
-      <div class="outil-desc">Questions Q1.1 à Q1.5 rédigées — analyse des besoins, parties prenantes, benchmark OMNI, maquettage WePlay, planification.</div>
-      <div class="outil-cta">⬇ Télécharger .docx</div>
-    </a>
   </div>
 
   <!-- Outils de suivi -->
   <div class="section-label">Outils de suivi de projet</div>
   <div class="suivi-grid">
-    <a href="https://app.notion.com/p/389e07a89d8481dd8498f83a8a409965" target="_blank" class="suivi-card">
-      <div class="suivi-icon">🏆</div>
+    <a href="/suivi" class="suivi-card">
+      <div class="suivi-icon">🗓</div>
       <div class="suivi-info">
-        <div class="suivi-title">Dossier de soutenance</div>
-        <div class="suivi-desc">Blocs 1 à 4 · Q1.1–Q4.4 · roadmap & log de mission</div>
+        <div class="suivi-title">Suivi des sprints</div>
+        <div class="suivi-desc">Tableau de bord des 12 semaines — attendus, statuts et livrables par sprint</div>
+      </div>
+      <div class="suivi-cta">Voir →</div>
+    </a>
+    <a href="https://app.notion.com/p/389e07a89d8481f2af46dd01e8baa1c3" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📊</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Roadmap · Sprints · Log</div>
+        <div class="suivi-desc">Roadmap 12 semaines · Sprint Reviews · journal de mission et décisions</div>
       </div>
       <div class="suivi-cta">Notion →</div>
     </a>
     <a href="https://flying-rest-f84.notion.site/Workshop-PlayOff-Amateurs-350a007cf7c7808fbff2d50186030ba4" target="_blank" class="suivi-card">
-      <div class="suivi-icon">🗺️</div>
+      <div class="suivi-icon">📁</div>
       <div class="suivi-info">
-        <div class="suivi-title">Workshop PlayOff</div>
-        <div class="suivi-desc">Documentation source · roadmap, backlog, Sprint Reviews, CR</div>
+        <div class="suivi-title">Dossier Sandrine</div>
+        <div class="suivi-desc">Workspace PlayOff — travail au jour le jour, résumés, documentation source</div>
       </div>
       <div class="suivi-cta">Notion →</div>
     </a>
-    <a href="https://flying-rest-f84.notion.site" target="_blank" class="suivi-card">
+    <a href="https://flying-rest-f84.notion.site/3-SPRINT-350a007cf7c780c68437dc0769d5b6f2" target="_blank" class="suivi-card">
       <div class="suivi-icon">🔄</div>
       <div class="suivi-info">
         <div class="suivi-title">Sprint Reviews</div>
@@ -256,26 +236,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       </div>
       <div class="suivi-cta">Notion →</div>
     </a>
-    <a href="https://flying-rest-f84.notion.site" target="_blank" class="suivi-card">
+    <a href="https://flying-rest-f84.notion.site/Le-travail-au-jour-le-jour-350a007cf7c780149df5f29aa00a7a7b" target="_blank" class="suivi-card">
       <div class="suivi-icon">📝</div>
       <div class="suivi-info">
-        <div class="suivi-title">Comptes-rendus (CR)</div>
-        <div class="suivi-desc">RM1 à RM11 · journal de mission et décisions techniques</div>
+        <div class="suivi-title">Journal de mission</div>
+        <div class="suivi-desc">Travail au jour le jour · notes · comptes-rendus · décisions techniques</div>
       </div>
       <div class="suivi-cta">Notion →</div>
     </a>
   </div>
 
-  <!-- Bubble -->
-  <div class="section-label">Application en développement</div>
-  <a href="https://bubble.io/page?id=weplay-14317&tab=Design&name=index" target="_blank" class="bubble-bloc" style="text-decoration:none;display:flex;cursor:pointer">
-    <div class="bubble-icon">🫧</div>
-    <div class="bubble-info">
-      <h3>WePlay — MVP Bubble</h3>
-      <p>Application de location de terrains entre amis. Parcours utilisateur : connexion → sélection terrain → réservation créneau → récapitulatif et répartition des frais. Stack : Bubble + Airtable + Make.</p>
-      <span class="bubble-badge">⏳ Sprint 5–6 · En construction</span>
-    </div>
-  </a>
+  <!-- Dossier de soutenance -->
+  <div class="section-label">Dossier de soutenance</div>
+  <div class="suivi-grid" style="grid-template-columns:repeat(2,1fr)">
+    <a href="/dossier" class="suivi-card">
+      <div class="suivi-icon">🏆</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Suivi du dossier de soutenance</div>
+        <div class="suivi-desc">Blocs 1 à 4 · Q1.1–Q4.4 · réponses aux questions du référentiel RNCP</div>
+      </div>
+      <div class="suivi-cta">Voir →</div>
+    </a>
+    <a href="/downloads/PlayOff_Dossier_Q1_V2.docx" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📄</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Dossier Q1 — Word</div>
+        <div class="suivi-desc">Q1.1 à Q1.5 rédigés — besoins, parties prenantes, benchmark OMNI, maquettage, planification</div>
+      </div>
+      <div class="suivi-cta">⬇ .docx</div>
+    </a>
+  </div>
 
 </div>
 
