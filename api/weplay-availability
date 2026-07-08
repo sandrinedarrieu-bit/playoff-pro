@@ -1,0 +1,29 @@
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const TOKEN = process.env.AIRTABLE_WEPLAY_TOKEN;
+  const BASE_ID = 'appxMJADTuUDIs91H';
+  const TABLE_ID = 'tblZZZOdXFA0Y3DUU'; // Reservation_WePlay
+
+  try {
+    const formula = encodeURIComponent(`{Statut_paiement}="Validé"`);
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula=${formula}`;
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data?.error?.message || 'Erreur Airtable');
+
+    const reservations = (data.records || [])
+      .filter(r => (r.fields['Terrain'] || []).length)
+      .map(r => ({
+        terrainId: r.fields['Terrain'][0],
+        date: r.fields['Date_creneau'] || '',
+        heure: r.fields['Heure_creneau'] || ''
+      }));
+
+    res.status(200).json({ reservations });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
