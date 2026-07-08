@@ -358,7 +358,8 @@ async function openUnsubscribe(equipeId,equipeNom){
   select.innerHTML='<option value="">Chargement...</option>';
   document.getElementById('unsub-modal').classList.add('open');
   try{
-    const formula=encodeURIComponent(`FIND("${equipeId}", ARRAYJOIN(Equipe_lien))`);
+    const nomEscaped=equipeNom.replace(/"/g,'\\"');
+    const formula=encodeURIComponent(`{Equipe_nom_automatisation} = "${nomEscaped}"`);
     const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}?filterByFormula=${formula}`;
     const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
     const data=await r.json();
