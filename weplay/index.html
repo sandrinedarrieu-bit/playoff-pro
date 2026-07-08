@@ -47,6 +47,7 @@ h1{font-family:'Poppins',sans-serif;font-weight:600;font-size:22px;color:var(--t
 .pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
 .pill{padding:8px 16px;border-radius:17px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
 .pill.selected{background:var(--violet);color:#fff;border-color:var(--violet)}
+.pill.booked{background:#f0eeea;color:#bbb;cursor:not-allowed;text-decoration:line-through}
 .terrain-card{border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer}
 .terrain-card.selected{border-color:var(--violet);background:var(--violet-light)}
 .terrain-card .t-nom{font-weight:600;font-size:13px;color:var(--text)}
@@ -98,7 +99,7 @@ h1{font-family:'Poppins',sans-serif;font-weight:600;font-size:22px;color:var(--t
         <div id="terrain-list"></div>
 
         <label class="field-label">Date</label>
-        <input class="field-input" type="date" id="input-date">
+        <input class="field-input" type="date" id="input-date" onchange="updateHeureAvailability()">
 
         <label class="field-label">Créneau horaire</label>
         <div class="pill-group">
@@ -107,6 +108,7 @@ h1{font-family:'Poppins',sans-serif;font-weight:600;font-size:22px;color:var(--t
           <button class="pill" data-heure="20h00" onclick="selectHeure(this)">20h00</button>
           <button class="pill" data-heure="21h00" onclick="selectHeure(this)">21h00</button>
         </div>
+        <p id="dispo-note" style="font-size:11px;color:var(--gray);margin:-12px 0 18px"></p>
       </div>
 
       <div class="spacer"></div>
@@ -157,7 +159,7 @@ h1{font-family:'Poppins',sans-serif;font-weight:600;font-size:22px;color:var(--t
 </div>
 
 <script>
-let TERRAINS=[],selectedSport=null,selectedTerrain=null,selectedHeure=null;
+let TERRAINS=[],RESERVATIONS=[],selectedSport=null,selectedTerrain=null,selectedHeure=null;
 
 function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -174,6 +176,11 @@ async function loadTerrains(){
   }catch(err){
     document.getElementById('sport-pills').innerHTML=`<div class="error-msg">Erreur : ${err.message}</div>`;
   }
+  try{
+    const r2=await fetch('/api/weplay-availability');
+    const data2=await r2.json();
+    if(r2.ok)RESERVATIONS=data2.reservations||[];
+  }catch(err){/* silencieux — la dispo est une amélioration, pas bloquante */}
 }
 
 function renderSportPills(){
@@ -203,7 +210,24 @@ function renderTerrainList(){
 
 function selectTerrain(id){
   selectedTerrain=TERRAINS.find(t=>t.id===id);
+  selectedHeure=null;
   document.querySelectorAll('.terrain-card').forEach(c=>c.classList.toggle('selected',c.dataset.id===id));
+  updateHeureAvailability();
+}
+
+function updateHeureAvailability(){
+  const date=document.getElementById('input-date').value;
+  const note=document.getElementById('dispo-note');
+  document.querySelectorAll('[data-heure]').forEach(p=>p.classList.remove('selected'));
+  selectedHeure=null;
+  if(!selectedTerrain||!date){note.textContent='';document.querySelectorAll('[data-heure]').forEach(p=>{p.classList.remove('booked');p.disabled=false});return}
+  const prisesPourCeJour=RESERVATIONS.filter(r=>r.terrainId===selectedTerrain.id&&r.date===date).map(r=>r.heure);
+  document.querySelectorAll('[data-heure]').forEach(p=>{
+    const pris=prisesPourCeJour.includes(p.dataset.heure);
+    p.classList.toggle('booked',pris);
+    p.disabled=pris;
+  });
+  note.textContent=prisesPourCeJour.length?`Créneaux déjà réservés ce jour-là : ${prisesPourCeJour.join(', ')}`:'Tous les créneaux sont disponibles ce jour-là.';
 }
 
 function selectHeure(el){
