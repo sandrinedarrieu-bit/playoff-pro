@@ -83,6 +83,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .btn-make{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#E8511A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
 .btn-make:hover{background:#d44616}
 .action-note{font-size:11px;color:#aaa;margin-top:6px}
+.btn-add-player{font-size:11px;color:#fff;background:#1B2A4A;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap}
+.btn-add-player:hover{background:#142036}
+.section-foot{margin-top:10px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1000}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:12px;width:360px;max-width:90vw;overflow:hidden}
+.modal-head{background:#1B2A4A;color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:14px;font-weight:600}
+.modal-body{padding:18px}
+.modal-field{margin-bottom:12px}
+.modal-field label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:5px}
+.modal-field input,.modal-field select{width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;outline:none}
+.modal-field input:focus,.modal-field select:focus{border-color:#1B2A4A}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.btn-cancel{padding:8px 16px;background:#fff;border:1px solid #ddd;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#666}
+.btn-submit{padding:8px 16px;background:#1B2A4A;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-submit:disabled{opacity:0.5;cursor:not-allowed}
 .loading{text-align:center;padding:3rem;color:#aaa;font-size:13px}
 .empty{text-align:center;padding:3rem;color:#aaa;font-size:13px}
 .toast{position:fixed;bottom:24px;right:24px;background:#1B2A4A;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;z-index:999}
@@ -152,9 +169,48 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- Modale Ajouter un joueur -->
+<div class="modal-overlay" id="player-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Ajouter un joueur — <span id="modal-equipe-nom"></span></h3>
+      <button class="close-btn" onclick="closePlayerModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Nom</label>
+        <input type="text" id="player-nom" placeholder="Nom du joueur" />
+      </div>
+      <div class="modal-field">
+        <label>Prénom</label>
+        <input type="text" id="player-prenom" placeholder="Prénom du joueur" />
+      </div>
+      <div class="modal-field">
+        <label>E-mail</label>
+        <input type="email" id="player-email" placeholder="joueur@exemple.com" />
+      </div>
+      <div class="modal-field">
+        <label>Téléphone</label>
+        <input type="text" id="player-tel" placeholder="06 12 34 56 78" />
+      </div>
+      <div class="modal-field">
+        <label>Rôle</label>
+        <select id="player-role">
+          <option value="Joueur">Joueur</option>
+          <option value="Capitaine">Capitaine</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closePlayerModal()">Annuler</button>
+        <button class="btn-submit" id="btn-submit-player" onclick="submitPlayer()">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null;
-const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY';
+let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null;
+const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9';
 const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
 
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;setTimeout(()=>t.className='toast',3000)}
@@ -235,12 +291,71 @@ async function openDetail(id){
       const nb=e.fields['Nombre_joueurs_par_equipe']||0;
       const complete=nb>=5;
       const sc=complete?'eq-complete':'eq-incomplete';
-      return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${complete?'Complète':'Incomplète'}</span></div>`;
+      const nomEq=(e.fields['Equipe']||'—').replace(/'/g,"\\'");
+      return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${complete?'Complète':'Incomplète'}</span><button class="btn-add-player" onclick="openAddPlayer('${e.id}','${nomEq}')">+ Joueur</button></div>`;
     }).join('')}</div>`;
   }catch(err){document.getElementById('detail-equipes').innerHTML='<div class="empty">Erreur de chargement.</div>'}
 }
 
 function closeDetail(){selectedComp=null;document.getElementById('detail-panel').classList.remove('open');applyFilters()}
+
+function openAddPlayer(equipeId,equipeNom){
+  addPlayerEquipeId=equipeId;
+  document.getElementById('modal-equipe-nom').textContent=equipeNom;
+  document.getElementById('player-nom').value='';
+  document.getElementById('player-prenom').value='';
+  document.getElementById('player-email').value='';
+  document.getElementById('player-tel').value='';
+  document.getElementById('player-role').value='Joueur';
+  document.getElementById('player-modal').classList.add('open');
+  document.getElementById('player-nom').focus();
+}
+
+function closePlayerModal(){
+  addPlayerEquipeId=null;
+  document.getElementById('player-modal').classList.remove('open');
+}
+
+async function submitPlayer(){
+  const nom=document.getElementById('player-nom').value.trim();
+  const prenom=document.getElementById('player-prenom').value.trim();
+  const email=document.getElementById('player-email').value.trim();
+  const tel=document.getElementById('player-tel').value.trim();
+  const role=document.getElementById('player-role').value;
+  if(!nom){showToast('Le nom est obligatoire');return}
+  if(!addPlayerEquipeId){showToast('Erreur : équipe non sélectionnée');return}
+  const btn=document.getElementById('btn-submit-player');
+  btn.disabled=true;btn.textContent='Ajout...';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}`;
+    const fields={
+      'Nom_contact':nom,
+      'Role':role,
+      'Section':'Externe',
+      'Equipe_lien':[addPlayerEquipeId]
+    };
+    if(prenom)fields['Prenom']=prenom;
+    if(email)fields['E-mail']=email;
+    if(tel)fields['Telephone']=tel;
+    const body={fields};
+    const r=await fetch(url,{
+      method:'POST',
+      headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok){
+      const errData=await r.json().catch(()=>({}));
+      throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+    }
+    showToast(`✓ ${nom} ajouté à l'équipe`,'success');
+    closePlayerModal();
+    if(selectedComp){await openDetail(selectedComp.id)}
+  }catch(err){
+    showToast(`Erreur : ${err.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent='Ajouter';
+  }
+}
 
 async function loadCompetitions(){
   document.getElementById('comps-grid').innerHTML='<div class="loading">Chargement des compétitions...</div>';
