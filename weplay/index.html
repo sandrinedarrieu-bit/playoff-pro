@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WePlay — Réserve ton terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --violet:#8C3EF4;
+  --orange:#FF8A00;
+  --violet-light:#F3EEFF;
+  --orange-light:#FFF1D4;
+  --orange-text:#B7660D;
+  --text:#2D3748;
+  --gray:#888;
+  --border:#E5E2ED;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',sans-serif;
+  background:#EDEBF5;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px 16px;
+}
+.stage-label{position:fixed;top:16px;left:50%;transform:translateX(-50%);font-size:12px;color:#6b6478;font-weight:500}
+.phone{width:390px;min-height:844px;background:#fff;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,0.25), 0 0 0 8px #1f1a2e;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.screen{display:none;flex-direction:column;flex:1}
+.screen.active{display:flex}
+.content{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column}
+.logo-chip{width:44px;height:44px;background:var(--violet);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:18px;margin-bottom:24px}
+h1{font-family:'Poppins',sans-serif;font-weight:600;font-size:22px;color:var(--text);margin-bottom:8px}
+.center h1,.center p{text-align:center}
+.subtitle{font-size:13px;color:var(--gray);line-height:1.5;margin-bottom:24px}
+.field-label{font-size:11px;font-weight:600;color:#666;margin-bottom:6px;display:block}
+.field-input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text);font-family:inherit;margin-bottom:18px;background:#fff}
+.btn{width:100%;padding:14px;border-radius:10px;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:14px}
+.btn-cta{background:var(--orange);color:#fff}
+.btn-cta:hover{background:#e67c00}
+.btn-cta:disabled{opacity:0.5;cursor:not-allowed}
+.btn-ghost{background:#fff;color:var(--text);border:1px solid var(--border)}
+.pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.pill{padding:8px 16px;border-radius:17px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
+.pill.selected{background:var(--violet);color:#fff;border-color:var(--violet)}
+.terrain-card{border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer}
+.terrain-card.selected{border-color:var(--violet);background:var(--violet-light)}
+.terrain-card .t-nom{font-weight:600;font-size:13px;color:var(--text)}
+.terrain-card .t-meta{font-size:11px;color:var(--gray);margin-top:2px}
+.card-violet-light{background:var(--violet-light);border-radius:14px;padding:16px;margin-bottom:18px}
+.card-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text);margin-bottom:8px;font-weight:500}
+.card-row:last-child{margin-bottom:0}
+.card-row span:first-child{color:#666;font-weight:400}
+.card-violet{background:var(--violet);border-radius:14px;padding:16px;color:#fff;margin-bottom:18px}
+.card-violet .card-row span{color:#fff}
+.card-violet .card-row span:first-child{color:rgba(255,255,255,0.85);font-weight:400}
+.card-alert{background:var(--orange-light);border-radius:14px;padding:16px;margin-bottom:18px}
+.card-alert strong{display:block;font-size:13px;color:var(--orange-text);margin-bottom:6px}
+.card-alert p{font-size:11px;color:var(--orange-text);line-height:1.5}
+.spacer{flex:1}
+.loading-msg{text-align:center;color:var(--gray);font-size:13px;padding:24px 0}
+.error-msg{background:var(--orange-light);color:var(--orange-text);border-radius:10px;padding:12px;font-size:12px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="stage-label">WePlay — réservation réelle (Airtable + Stripe test)</div>
+<div class="phone">
+
+  <div class="screen active" id="screen-connexion">
+    <div class="content center" style="justify-content:center">
+      <div class="logo-chip" style="margin:0 auto 24px">W</div>
+      <h1>Bienvenue !</h1>
+      <p class="subtitle">Connecte-toi pour réserver tes terrains préférés.</p>
+      <label class="field-label" style="text-align:left">Adresse e-mail</label>
+      <input class="field-input" type="text" placeholder="exemple@email.com">
+      <label class="field-label" style="text-align:left">Mot de passe</label>
+      <input class="field-input" type="text" placeholder="••••••••">
+      <button class="btn btn-cta" onclick="go('selection')">Se connecter</button>
+      <p style="font-size:10px;color:var(--gray);text-align:center;margin-top:8px">En continuant, tu acceptes nos conditions d'utilisation</p>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-selection">
+    <div class="content">
+      <div class="logo-chip">W</div>
+      <h1>Réserve ton terrain</h1>
+      <p class="subtitle">Choisis ton sport, ton terrain et ton créneau.</p>
+
+      <label class="field-label">Sport</label>
+      <div class="pill-group" id="sport-pills"><span class="loading-msg">Chargement des terrains...</span></div>
+
+      <div id="terrain-section" style="display:none">
+        <label class="field-label">Terrains disponibles</label>
+        <div id="terrain-list"></div>
+
+        <label class="field-label">Date</label>
+        <input class="field-input" type="date" id="input-date">
+
+        <label class="field-label">Créneau horaire</label>
+        <div class="pill-group">
+          <button class="pill" data-heure="18h00" onclick="selectHeure(this)">18h00</button>
+          <button class="pill" data-heure="19h00" onclick="selectHeure(this)">19h00</button>
+          <button class="pill" data-heure="20h00" onclick="selectHeure(this)">20h00</button>
+          <button class="pill" data-heure="21h00" onclick="selectHeure(this)">21h00</button>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+      <button class="btn btn-cta" onclick="goToRecap()">→ Voir le récapitulatif</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-recap">
+    <div class="content">
+      <h1>Récapitulatif de ta réservation</h1>
+      <p class="subtitle">Vérifie les détails avant de payer.</p>
+
+      <div class="card-violet-light" id="recap-summary"></div>
+
+      <label class="field-label">Ton nom</label>
+      <input class="field-input" type="text" id="input-nom" placeholder="Nom et prénom">
+      <label class="field-label">Ton e-mail</label>
+      <input class="field-input" type="email" id="input-email" placeholder="toi@exemple.com">
+
+      <label class="field-label">Nombre de joueurs</label>
+      <input class="field-input" type="number" id="input-joueurs" min="1" value="10" oninput="recalculerPrix()">
+      <p style="font-size:11px;color:var(--gray);margin:-10px 0 18px">Information indicative — n'influence pas le montant à payer.</p>
+
+      <div class="card-violet">
+        <div class="card-row"><span>Prix de la location du terrain</span><span id="recap-prix-total">— €</span></div>
+        <div class="card-row"><span>Soit environ par joueur</span><span id="recap-cout-joueur">— €</span></div>
+      </div>
+
+      <div class="card-alert">
+        <strong>Paiement sécurisé (mode test)</strong>
+        <p>Utilise la carte de test Stripe 4242 4242 4242 4242, n'importe quelle date future, n'importe quel CVC.</p>
+      </div>
+
+      <div id="recap-error"></div>
+      <div class="spacer"></div>
+      <button class="btn btn-cta" id="btn-payer" onclick="lancerPaiement()">Payer</button>
+      <button class="btn btn-ghost" onclick="goToSelection()">← Retour</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-confirmation">
+    <div class="content center" style="justify-content:flex-start;padding-top:48px">
+      <div class="logo-chip" style="margin:0 auto 24px">W</div>
+      <div id="confirmation-content"><p class="loading-msg">Vérification du paiement...</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let TERRAINS=[],selectedSport=null,selectedTerrain=null,selectedHeure=null;
+
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+}
+
+async function loadTerrains(){
+  try{
+    const r=await fetch('/api/weplay-terrains');
+    const data=await r.json();
+    if(!r.ok)throw new Error(data.error||'Erreur de chargement');
+    TERRAINS=data.terrains||[];
+    renderSportPills();
+  }catch(err){
+    document.getElementById('sport-pills').innerHTML=`<div class="error-msg">Erreur : ${err.message}</div>`;
+  }
+}
+
+function renderSportPills(){
+  const sports=[...new Set(TERRAINS.map(t=>t.sport).filter(Boolean))];
+  const box=document.getElementById('sport-pills');
+  if(!sports.length){box.innerHTML='<div class="error-msg">Aucun terrain trouvé dans la base.</div>';return}
+  box.innerHTML=sports.map(s=>`<button class="pill" data-sport="${s}" onclick="selectSport(this,'${s}')">${s}</button>`).join('');
+}
+
+function selectSport(el,sport){
+  selectedSport=sport;selectedTerrain=null;
+  document.querySelectorAll('#sport-pills .pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  renderTerrainList();
+  document.getElementById('terrain-section').style.display='block';
+}
+
+function renderTerrainList(){
+  const list=TERRAINS.filter(t=>t.sport===selectedSport);
+  const box=document.getElementById('terrain-list');
+  if(!list.length){box.innerHTML='<div class="error-msg">Aucun terrain pour ce sport.</div>';return}
+  box.innerHTML=list.map(t=>`<div class="terrain-card" data-id="${t.id}" onclick="selectTerrain('${t.id}')">
+    <div class="t-nom">${t.nom} — ${t.prix} €</div>
+    <div class="t-meta">${t.ville||''}${t.capacite?` · Capacité ${t.capacite}`:''}</div>
+  </div>`).join('');
+}
+
+function selectTerrain(id){
+  selectedTerrain=TERRAINS.find(t=>t.id===id);
+  document.querySelectorAll('.terrain-card').forEach(c=>c.classList.toggle('selected',c.dataset.id===id));
+}
+
+function selectHeure(el){
+  selectedHeure=el.dataset.heure;
+  document.querySelectorAll('[data-heure]').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function goToSelection(){go('selection')}
+
+function goToRecap(){
+  const date=document.getElementById('input-date').value;
+  if(!selectedSport||!selectedTerrain){alert('Choisis un sport et un terrain');return}
+  if(!date){alert('Choisis une date');return}
+  if(!selectedHeure){alert('Choisis un créneau horaire');return}
+  document.getElementById('recap-summary').innerHTML=`
+    <div class="card-row"><span>Terrain</span><span>${selectedTerrain.nom}</span></div>
+    <div class="card-row"><span>Sport</span><span>${selectedSport}</span></div>
+    <div class="card-row"><span>Date</span><span>${date}</span></div>
+    <div class="card-row"><span>Créneau</span><span>${selectedHeure}</span></div>
+  `;
+  recalculerPrix();
+  go('recap');
+}
+
+function recalculerPrix(){
+  const n=parseInt(document.getElementById('input-joueurs').value)||1;
+  const total=selectedTerrain?selectedTerrain.prix:0;
+  document.getElementById('recap-prix-total').textContent=total+' €';
+  document.getElementById('recap-cout-joueur').textContent=(total/n).toFixed(2)+' €';
+}
+
+async function lancerPaiement(){
+  const nom=document.getElementById('input-nom').value.trim();
+  const email=document.getElementById('input-email').value.trim();
+  const joueurs=document.getElementById('input-joueurs').value;
+  const date=document.getElementById('input-date').value;
+  const errBox=document.getElementById('recap-error');
+  errBox.innerHTML='';
+  if(!nom||!email){errBox.innerHTML='<div class="error-msg">Merci de renseigner ton nom et ton e-mail.</div>';return}
+
+  const prixTotal=selectedTerrain.prix;
+  const btn=document.getElementById('btn-payer');
+  btn.disabled=true;btn.textContent='Redirection vers le paiement...';
+
+  try{
+    const r=await fetch('/api/weplay-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        terrainId:selectedTerrain.id,
+        terrainNom:selectedTerrain.nom,
+        sport:selectedSport,
+        date,heure:selectedHeure,
+        joueurs,prix:prixTotal,
+        email,nom
+      })
+    });
+    const data=await r.json();
+    if(!r.ok)throw new Error(data.error||'Erreur de paiement');
+    window.location.href=data.url;
+  }catch(err){
+    errBox.innerHTML=`<div class="error-msg">Erreur : ${err.message}</div>`;
+    btn.disabled=false;btn.textContent='Payer';
+  }
+}
+
+async function checkConfirmation(){
+  const params=new URLSearchParams(window.location.search);
+  const sessionId=params.get('session_id');
+  const screen=params.get('screen');
+
+  if(screen==='confirmation'&&sessionId){
+    go('confirmation');
+    try{
+      const r=await fetch(`/api/weplay-confirm?session_id=${encodeURIComponent(sessionId)}`);
+      const data=await r.json();
+      if(!r.ok)throw new Error(data.error||'Erreur de vérification');
+      if(!data.paid){
+        document.getElementById('confirmation-content').innerHTML=`<h1>Paiement non confirmé</h1><p class="subtitle">Le paiement n'a pas encore été validé par Stripe.</p><button class="btn btn-ghost" onclick="window.location.href='/weplay/'">Retour à l'accueil</button>`;
+        return;
+      }
+      const res=data.reservation||{};
+      document.getElementById('confirmation-content').innerHTML=`
+        <h1>C'est réservé !</h1>
+        <p class="subtitle">Ta réservation est confirmée et payée.</p>
+        <div class="card-violet-light" style="text-align:left;width:100%">
+          <p style="text-align:center;font-size:12px;font-weight:600;color:var(--violet);margin-bottom:14px">Référence de réservation</p>
+          <div class="card-row"><span>Terrain</span><span>${data.terrainNom||'—'}</span></div>
+          <div class="card-row"><span>Sport</span><span>${data.sport||'—'}</span></div>
+          <div class="card-row"><span>Date</span><span>${res['Date_creneau']||'—'}</span></div>
+          <div class="card-row"><span>Créneau</span><span>${res['Heure_creneau']||'—'}</span></div>
+          <div class="card-row"><span>Joueurs</span><span>${res['Nombre_joueurs']||'—'}</span></div>
+          <div class="card-row"><span>Prix payé</span><span>${res['Prix']||'—'} €</span></div>
+        </div>
+        <button class="btn btn-cta" style="width:100%" onclick="window.location.href='/weplay/'">Réserver un autre terrain</button>
+      `;
+    }catch(err){
+      document.getElementById('confirmation-content').innerHTML=`<div class="error-msg">Erreur : ${err.message}</div>`;
+    }
+  }else if(screen==='recap'){
+    go('selection');
+    if(params.get('cancelled'))alert('Paiement annulé — tu peux réessayer.');
+  }
+}
+
+loadTerrains();
+checkConfirmation();
+</script>
+</body>
+</html>
