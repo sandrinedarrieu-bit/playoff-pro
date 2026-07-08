@@ -13,6 +13,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Informations de réservation incomplètes' });
     }
 
+    // Vérification anti-double-réservation : ce créneau est-il déjà pris pour ce terrain ?
+    const AIRTABLE_TOKEN = process.env.AIRTABLE_WEPLAY_TOKEN;
+    const BASE_ID = 'appxMJADTuUDIs91H';
+    const TABLE_RESA = 'tblZZZOdXFA0Y3DUU';
+    const terrainNomEscaped = String(terrainNom || '').replace(/"/g, '\\"');
+    const conflictFormula = encodeURIComponent(
+      `AND({Statut_paiement}="Validé", {Date_creneau}="${date}", {Heure_creneau}="${heure}", FIND("${terrainNomEscaped}", ARRAYJOIN({Terrain})))`
+    );
+    const conflictUrl = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_RESA}?filterByFormula=${conflictFormula}`;
+    const conflictResp = await fetch(conflictUrl, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
+    const conflictData = await conflictResp.json();
+    if (conflictResp.ok && conflictData.records && conflictData.records.length > 0) {
+      return res.status(409).json({ error: 'Ce créneau vient d\'être réservé par quelqu\'un d\'autre. Merci d\'en choisir un autre.' });
+    }
+
     const origin = `https://${req.headers.host}`;
 
     const params = new URLSearchParams();
