@@ -113,6 +113,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .btn-cancel{padding:8px 16px;background:#fff;border:1px solid #ddd;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#666}
 .btn-submit{padding:8px 16px;background:#1B2A4A;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
 .btn-submit:disabled{opacity:0.5;cursor:not-allowed}
+.mode-toggle{display:flex;gap:6px;margin-bottom:16px;background:#f0eeea;border-radius:8px;padding:3px}
+.mode-btn{flex:1;padding:7px;border:none;background:none;border-radius:6px;font-size:12px;font-weight:600;color:#666;cursor:pointer}
+.mode-btn.active{background:#1B2A4A;color:#fff}
 .loading{text-align:center;padding:3rem;color:#aaa;font-size:13px}
 .empty{text-align:center;padding:3rem;color:#aaa;font-size:13px}
 .toast{position:fixed;bottom:24px;right:24px;background:#1B2A4A;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;z-index:999}
@@ -193,6 +196,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <button class="close-btn" onclick="closePlayerModal()">✕</button>
     </div>
     <div class="modal-body">
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-btn-new" onclick="setAddPlayerMode('new')">Nouveau joueur</button>
+        <button class="mode-btn" id="mode-btn-existing" onclick="setAddPlayerMode('existing')">Joueur existant</button>
+      </div>
+      <div id="add-player-existing-section" style="display:none">
+        <div class="modal-field">
+          <label>Joueur disponible (sans équipe)</label>
+          <select id="existing-player-select"><option value="">Chargement...</option></select>
+        </div>
+      </div>
+      <div id="add-player-new-section">
       <div class="modal-field">
         <label>Nom</label>
         <input type="text" id="player-nom" placeholder="Nom du joueur" />
@@ -215,6 +229,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
           <option value="Joueur">Joueur</option>
           <option value="Capitaine">Capitaine</option>
         </select>
+      </div>
       </div>
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closePlayerModal()">Annuler</button>
@@ -245,7 +260,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 </div>
 
 <script>
-let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null,unsubEquipeId=null;
+let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null,unsubEquipeId=null,addPlayerMode='new';
 const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9';
 const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
 
@@ -424,8 +439,39 @@ function openAddPlayer(equipeId,equipeNom){
   document.getElementById('player-email').value='';
   document.getElementById('player-tel').value='';
   document.getElementById('player-role').value='Joueur';
+  setAddPlayerMode('new');
   document.getElementById('player-modal').classList.add('open');
   document.getElementById('player-nom').focus();
+}
+
+function setAddPlayerMode(mode){
+  addPlayerMode=mode;
+  document.getElementById('mode-btn-new').classList.toggle('active',mode==='new');
+  document.getElementById('mode-btn-existing').classList.toggle('active',mode==='existing');
+  document.getElementById('add-player-new-section').style.display=mode==='new'?'block':'none';
+  document.getElementById('add-player-existing-section').style.display=mode==='existing'?'block':'none';
+  document.getElementById('btn-submit-player').textContent=mode==='new'?'Ajouter':'Rattacher à l\'équipe';
+  if(mode==='existing')loadAvailablePlayers();
+}
+
+async function loadAvailablePlayers(){
+  const select=document.getElementById('existing-player-select');
+  select.innerHTML='<option value="">Chargement...</option>';
+  try{
+    const formula=encodeURIComponent(`LEN(ARRAYJOIN(Equipe_lien))=0`);
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}?filterByFormula=${formula}`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    const data=await r.json();
+    const joueurs=data.records||[];
+    if(!joueurs.length){select.innerHTML='<option value="">Aucun joueur disponible sans équipe</option>';return}
+    select.innerHTML=joueurs.map(j=>{
+      const nom=[j.fields['Prenom'],j.fields['Nom_contact']].filter(Boolean).join(' ')||'(sans nom)';
+      const email=j.fields['E-mail']?` — ${j.fields['E-mail']}`:'';
+      return `<option value="${j.id}">${nom}${email}</option>`;
+    }).join('');
+  }catch(err){
+    select.innerHTML='<option value="">Erreur de chargement</option>';
+  }
 }
 
 function closePlayerModal(){
@@ -434,14 +480,42 @@ function closePlayerModal(){
 }
 
 async function submitPlayer(){
+  if(!addPlayerEquipeId){showToast('Erreur : équipe non sélectionnée');return}
+  const btn=document.getElementById('btn-submit-player');
+
+  if(addPlayerMode==='existing'){
+    const playerId=document.getElementById('existing-player-select').value;
+    if(!playerId){showToast('Sélectionne un joueur');return}
+    btn.disabled=true;btn.textContent='Rattachement...';
+    try{
+      const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}`;
+      const body={records:[{id:playerId,fields:{'Equipe_lien':[addPlayerEquipeId]}}]};
+      const r=await fetch(url,{
+        method:'PATCH',
+        headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+      if(!r.ok){
+        const errData=await r.json().catch(()=>({}));
+        throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+      }
+      showToast('✓ Joueur rattaché à l\'équipe','success');
+      closePlayerModal();
+      await refreshAfterPlayerChange();
+    }catch(err){
+      showToast(`Erreur : ${err.message}`);
+    }finally{
+      btn.disabled=false;btn.textContent='Rattacher à l\'équipe';
+    }
+    return;
+  }
+
   const nom=document.getElementById('player-nom').value.trim();
   const prenom=document.getElementById('player-prenom').value.trim();
   const email=document.getElementById('player-email').value.trim();
   const tel=document.getElementById('player-tel').value.trim();
   const role=document.getElementById('player-role').value;
   if(!nom){showToast('Le nom est obligatoire');return}
-  if(!addPlayerEquipeId){showToast('Erreur : équipe non sélectionnée');return}
-  const btn=document.getElementById('btn-submit-player');
   btn.disabled=true;btn.textContent='Ajout...';
   try{
     const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}`;
