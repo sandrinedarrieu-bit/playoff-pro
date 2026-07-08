@@ -95,6 +95,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .action-note{font-size:11px;color:#aaa;margin-top:6px}
 .btn-add-player{font-size:11px;color:#fff;background:#1B2A4A;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap}
 .btn-add-player:hover{background:#142036}
+.btn-remove-player{font-size:11px;color:#721c24;background:#f8d7da;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap}
+.btn-remove-player:hover{background:#f1aeb5}
+.equipe-actions{display:flex;gap:6px}
 .section-foot{margin-top:10px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.open{display:flex}
@@ -221,8 +224,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 </div>
 
+<!-- Modale Désinscrire un joueur -->
+<div class="modal-overlay" id="unsub-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Désinscrire un joueur — <span id="unsub-equipe-nom"></span></h3>
+      <button class="close-btn" onclick="closeUnsubModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Joueur inscrit</label>
+        <select id="unsub-player-select"><option value="">Chargement...</option></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeUnsubModal()">Annuler</button>
+        <button class="btn-submit" id="btn-submit-unsub" style="background:#721c24" onclick="submitUnsubscribe()">Désinscrire</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null;
+let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null,unsubEquipeId=null;
 const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9';
 const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
 
@@ -321,12 +344,68 @@ async function openDetail(id){
       const sc=complete?'eq-complete':(regression?'eq-regression':'eq-incomplete');
       const label=complete?'Complète':(regression?'⚠️ Régression':'Incomplète');
       const nomEq=(e.fields['Equipe']||'—').replace(/'/g,"\\'");
-      return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${label}</span><button class="btn-add-player" onclick="openAddPlayer('${e.id}','${nomEq}')">+ Joueur</button></div>`;
+      return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${label}</span><div class="equipe-actions"><button class="btn-add-player" onclick="openAddPlayer('${e.id}','${nomEq}')">+ Joueur</button><button class="btn-remove-player" onclick="openUnsubscribe('${e.id}','${nomEq}')">− Désinscrire</button></div></div>`;
     }).join('')}</div>`;
   }catch(err){document.getElementById('detail-equipes').innerHTML='<div class="empty">Erreur de chargement.</div>'}
 }
 
 function closeDetail(){selectedComp=null;document.getElementById('detail-panel').classList.remove('open');applyFilters()}
+
+async function openUnsubscribe(equipeId,equipeNom){
+  unsubEquipeId=equipeId;
+  document.getElementById('unsub-equipe-nom').textContent=equipeNom;
+  const select=document.getElementById('unsub-player-select');
+  select.innerHTML='<option value="">Chargement...</option>';
+  document.getElementById('unsub-modal').classList.add('open');
+  try{
+    const formula=encodeURIComponent(`FIND("${equipeId}", ARRAYJOIN(Equipe_lien))`);
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}?filterByFormula=${formula}`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    const data=await r.json();
+    const joueurs=data.records||[];
+    if(!joueurs.length){select.innerHTML='<option value="">Aucun joueur inscrit</option>';return}
+    select.innerHTML=joueurs.map(j=>{
+      const nom=[j.fields['Prenom'],j.fields['Nom_contact']].filter(Boolean).join(' ')||'(sans nom)';
+      const role=j.fields['Role']?` — ${j.fields['Role']}`:'';
+      return `<option value="${j.id}">${nom}${role}</option>`;
+    }).join('');
+  }catch(err){
+    select.innerHTML='<option value="">Erreur de chargement</option>';
+  }
+}
+
+function closeUnsubModal(){
+  unsubEquipeId=null;
+  document.getElementById('unsub-modal').classList.remove('open');
+}
+
+async function submitUnsubscribe(){
+  const select=document.getElementById('unsub-player-select');
+  const playerId=select.value;
+  if(!playerId){showToast('Sélectionne un joueur à désinscrire');return}
+  const btn=document.getElementById('btn-submit-unsub');
+  btn.disabled=true;btn.textContent='Désinscription...';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CONTACT}`;
+    const body={records:[{id:playerId,fields:{'Equipe_lien':[]}}]};
+    const r=await fetch(url,{
+      method:'PATCH',
+      headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok){
+      const errData=await r.json().catch(()=>({}));
+      throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+    }
+    showToast('✓ Joueur désinscrit de l\'équipe','success');
+    closeUnsubModal();
+    if(selectedComp){await openDetail(selectedComp.id)}
+  }catch(err){
+    showToast(`Erreur : ${err.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent='Désinscrire';
+  }
+}
 
 function openAddPlayer(equipeId,equipeNom){
   addPlayerEquipeId=equipeId;
