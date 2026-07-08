@@ -351,6 +351,14 @@ async function openDetail(id){
 
 function closeDetail(){selectedComp=null;document.getElementById('detail-panel').classList.remove('open');applyFilters()}
 
+async function refreshAfterPlayerChange(){
+  await loadRegressions();
+  updateStats(allComps);
+  renderGlobalAlert(allComps);
+  applyFilters();
+  if(selectedComp){await openDetail(selectedComp.id)}
+}
+
 async function openUnsubscribe(equipeId,equipeNom){
   unsubEquipeId=equipeId;
   document.getElementById('unsub-equipe-nom').textContent=equipeNom;
@@ -400,7 +408,7 @@ async function submitUnsubscribe(){
     }
     showToast('✓ Joueur désinscrit de l\'équipe','success');
     closeUnsubModal();
-    if(selectedComp){await openDetail(selectedComp.id)}
+    await refreshAfterPlayerChange();
   }catch(err){
     showToast(`Erreur : ${err.message}`);
   }finally{
@@ -458,7 +466,7 @@ async function submitPlayer(){
     }
     showToast(`✓ ${nom} ajouté à l'équipe`,'success');
     closePlayerModal();
-    if(selectedComp){await openDetail(selectedComp.id)}
+    await refreshAfterPlayerChange();
   }catch(err){
     showToast(`Erreur : ${err.message}`);
   }finally{
