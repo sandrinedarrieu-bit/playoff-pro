@@ -180,7 +180,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <div class="detail-section"><h3>Équipes inscrites</h3><div id="detail-equipes"><div class="loading">Chargement...</div></div></div>
       <div class="detail-section">
         <h3>Action Make — Scénario 2</h3>
-        <button class="btn-make" id="btn-make" onclick="showToast(\"✓ Make se déclenchera sur le changement de statut\",\"success\")">⚡ Clôturer et générer la fiche compétition</button>
+        <button class="btn-make" id="btn-make" onclick="triggerCloture()">⚡ Clôturer et générer la fiche compétition</button>
         <div class="action-note">Déclenche le scénario Make : statut → Inscriptions clôturées → fiche Google Doc → email Ops</div>
       </div>
     </div>
@@ -259,9 +259,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 </div>
 
+<!-- Modale Ajouter une équipe -->
+<div class="modal-overlay" id="team-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Ajouter une équipe — <span id="modal-team-comp-nom"></span></h3>
+      <button class="close-btn" onclick="closeAddTeamModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Nom de l'équipe</label>
+        <input type="text" id="team-nom" placeholder="Nom de l'équipe" />
+      </div>
+      <div class="modal-field">
+        <label>Club (optionnel)</label>
+        <select id="team-club-select"><option value="">— Aucun club —</option></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeAddTeamModal()">Annuler</button>
+        <button class="btn-submit" id="btn-submit-team" onclick="submitTeam()">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null,unsubEquipeId=null,addPlayerMode='new';
-const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9';
+const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9',TABLE_CLUB='tbl3FI7FOOUycW7ej';
 const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
 
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;setTimeout(()=>t.className='toast',3000)}
@@ -342,7 +366,7 @@ async function openDetail(id){
       const liens=e.fields['Compétition_Lien']||[];
       return liens.includes(id);
     });
-    if(!equipes.length){document.getElementById('detail-equipes').innerHTML='<div class="empty">Aucune équipe inscrite.</div>';return}
+    if(!equipes.length){document.getElementById('detail-equipes').innerHTML='<div class="empty">Aucune équipe inscrite.</div><div class="section-foot"><button class="btn-add-player" onclick="openAddTeam()">+ Ajouter une équipe</button></div>';return}
     const hasRegression=equipes.some(e=>{
       const nb=e.fields['Nombre_joueurs_par_equipe']||0;
       const dejaValidee=!!e.fields['Date validation'];
@@ -360,7 +384,7 @@ async function openDetail(id){
       const label=complete?'Complète':(regression?'⚠️ Régression':'Incomplète');
       const nomEq=(e.fields['Equipe']||'—').replace(/'/g,"\\'");
       return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${label}</span><div class="equipe-actions"><button class="btn-add-player" onclick="openAddPlayer('${e.id}','${nomEq}')">+ Joueur</button><button class="btn-remove-player" onclick="openUnsubscribe('${e.id}','${nomEq}')">− Désinscrire</button></div></div>`;
-    }).join('')}</div>`;
+    }).join('')}</div><div class="section-foot"><button class="btn-add-player" onclick="openAddTeam()">+ Ajouter une équipe</button></div>`;
   }catch(err){document.getElementById('detail-equipes').innerHTML='<div class="empty">Erreur de chargement.</div>'}
 }
 
@@ -477,6 +501,100 @@ async function loadAvailablePlayers(){
 function closePlayerModal(){
   addPlayerEquipeId=null;
   document.getElementById('player-modal').classList.remove('open');
+}
+
+function openAddTeam(){
+  if(!selectedComp){showToast('Erreur : compétition non sélectionnée');return}
+  document.getElementById('modal-team-comp-nom').textContent=selectedComp.nom;
+  document.getElementById('team-nom').value='';
+  document.getElementById('team-modal').classList.add('open');
+  loadClubsForTeamModal();
+  document.getElementById('team-nom').focus();
+}
+
+function closeAddTeamModal(){
+  document.getElementById('team-modal').classList.remove('open');
+}
+
+async function loadClubsForTeamModal(){
+  const select=document.getElementById('team-club-select');
+  select.innerHTML='<option value="">Chargement...</option>';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_CLUB}`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    const data=await r.json();
+    const clubs=data.records||[];
+    select.innerHTML='<option value="">— Aucun club —</option>'+clubs.map(c=>`<option value="${c.id}">${c.fields['NomClub']||'(sans nom)'}</option>`).join('');
+  }catch(err){
+    select.innerHTML='<option value="">— Aucun club —</option>';
+  }
+}
+
+async function refreshAfterTeamChange(){
+  const compId=selectedComp?selectedComp.id:null;
+  await loadCompetitions();
+  if(compId){await openDetail(compId)}
+}
+
+async function triggerCloture(){
+  if(!selectedComp){showToast('Erreur : compétition non sélectionnée');return}
+  if(selectedComp.statut==='Inscriptions clôturées'){
+    showToast('Déjà clôturée — Make ne se redéclenche que si le statut change réellement. Pour régénérer une fiche, relance le scénario depuis Make.com.');
+    return;
+  }
+  if(!confirm(`Clôturer les inscriptions pour "${selectedComp.nom}" ?\n\nCela va changer son statut dans Airtable vers "Inscriptions clôturées", ce qui déclenche le scénario Make (génération de la fiche + email aux Ops) — si ce scénario est actif côté Make.`))return;
+  const btn=document.getElementById('btn-make');
+  btn.disabled=true;btn.textContent='Clôture en cours...';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_COMP}`;
+    const body={records:[{id:selectedComp.id,fields:{'Statut_competition':'Inscriptions clôturées'}}]};
+    const r=await fetch(url,{
+      method:'PATCH',
+      headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok){
+      const errData=await r.json().catch(()=>({}));
+      throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+    }
+    showToast('✓ Statut mis à jour — le scénario Make va se déclencher','success');
+    await refreshAfterTeamChange();
+  }catch(err){
+    showToast(`Erreur : ${err.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent='⚡ Clôturer et générer la fiche compétition';
+  }
+}
+
+async function submitTeam(){
+  const nom=document.getElementById('team-nom').value.trim();
+  if(!nom){showToast('Le nom de l\'équipe est obligatoire');return}
+  if(!selectedComp){showToast('Erreur : compétition non sélectionnée');return}
+  const clubId=document.getElementById('team-club-select').value;
+  const btn=document.getElementById('btn-submit-team');
+  btn.disabled=true;btn.textContent='Ajout...';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_EQ}`;
+    const fields={'Equipe':nom,'Compétition_Lien':[selectedComp.id]};
+    if(clubId)fields['Club_Lien']=[clubId];
+    const body={fields};
+    const r=await fetch(url,{
+      method:'POST',
+      headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok){
+      const errData=await r.json().catch(()=>({}));
+      throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+    }
+    showToast(`✓ Équipe "${nom}" ajoutée`,'success');
+    closeAddTeamModal();
+    await refreshAfterTeamChange();
+  }catch(err){
+    showToast(`Erreur : ${err.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent='Ajouter';
+  }
 }
 
 async function submitPlayer(){
