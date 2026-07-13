@@ -181,6 +181,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     <button class="filter-btn" onclick="setFilter('En cours',event)">En cours</button>
     <button class="filter-btn" onclick="setFilter('Terminée',event)">Terminées</button>
     <input class="search-input" type="text" placeholder="Rechercher..." id="search-input" oninput="applyFilters()">
+    <button class="btn-make" style="margin-left:auto" onclick="openNewCompetition()">+ Nouvelle compétition</button>
   </div>
 
   <div id="comps-grid" class="comps-grid"><div class="loading">Chargement...</div></div>
@@ -292,6 +293,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closeAddTeamModal()">Annuler</button>
         <button class="btn-submit" id="btn-submit-team" onclick="submitTeam()">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modale Nouvelle compétition -->
+<div class="modal-overlay" id="comp-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Nouvelle compétition</h3>
+      <button class="close-btn" onclick="closeNewCompetitionModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Nom de la compétition</label>
+        <input type="text" id="comp-nom" placeholder="ex : Challenge Marseille Hiver" />
+      </div>
+      <div class="modal-field">
+        <label>Discipline</label>
+        <input type="text" id="comp-discipline" list="comp-discipline-list" placeholder="ex : ⚽Football à 5" />
+        <datalist id="comp-discipline-list"></datalist>
+      </div>
+      <div class="modal-field">
+        <label>Ville / zone géographique</label>
+        <input type="text" id="comp-ville" list="comp-ville-list" placeholder="ex : Marseille" />
+        <datalist id="comp-ville-list"></datalist>
+      </div>
+      <div class="modal-field">
+        <label>Date de début</label>
+        <input type="date" id="comp-date-debut" />
+      </div>
+      <div class="modal-field">
+        <label>Date de fin</label>
+        <input type="date" id="comp-date-fin" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeNewCompetitionModal()">Annuler</button>
+        <button class="btn-submit" id="btn-submit-comp" onclick="submitNewCompetition()">Créer la compétition</button>
       </div>
     </div>
   </div>
@@ -598,6 +637,67 @@ async function refreshAfterTeamChange(){
   const compId=selectedComp?selectedComp.id:null;
   await loadCompetitions();
   if(compId){await openDetail(compId)}
+}
+
+function openNewCompetition(){
+  document.getElementById('comp-nom').value='';
+  document.getElementById('comp-discipline').value='';
+  document.getElementById('comp-ville').value='';
+  document.getElementById('comp-date-debut').value='';
+  document.getElementById('comp-date-fin').value='';
+  document.getElementById('comp-modal').classList.add('open');
+  populateCompDatalists();
+  document.getElementById('comp-nom').focus();
+}
+
+function closeNewCompetitionModal(){
+  document.getElementById('comp-modal').classList.remove('open');
+}
+
+function populateCompDatalists(){
+  const disciplines=new Set(),villes=new Set();
+  (allComps||[]).forEach(c=>{
+    if(c.discipline)disciplines.add(c.discipline);
+    if(c.ville)villes.add(c.ville);
+  });
+  document.getElementById('comp-discipline-list').innerHTML=[...disciplines].map(d=>`<option value="${d}">`).join('');
+  document.getElementById('comp-ville-list').innerHTML=[...villes].map(v=>`<option value="${v}">`).join('');
+}
+
+async function submitNewCompetition(){
+  const nom=document.getElementById('comp-nom').value.trim();
+  if(!nom){showToast('Le nom de la compétition est obligatoire');return}
+  const discipline=document.getElementById('comp-discipline').value.trim();
+  const ville=document.getElementById('comp-ville').value.trim();
+  const dateDebut=document.getElementById('comp-date-debut').value;
+  const dateFin=document.getElementById('comp-date-fin').value;
+  const btn=document.getElementById('btn-submit-comp');
+  btn.disabled=true;btn.textContent='Création...';
+  try{
+    const fields={'NomCompetition':nom,'Statut_competition':'Ouverte aux inscriptions'};
+    if(discipline)fields['Disciplines']=discipline;
+    if(ville)fields['Villes/zone geographique']=ville;
+    if(dateDebut)fields['DateDébut']=dateDebut;
+    if(dateFin)fields['DateFin']=dateFin;
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_COMP}`;
+    const body={fields,typecast:true};
+    const r=await fetch(url,{
+      method:'POST',
+      headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok){
+      const errData=await r.json().catch(()=>({}));
+      throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+    }
+    showToast(`✓ Compétition "${nom}" créée`,'success');
+    closeNewCompetitionModal();
+    await loadCompetitions();
+  }catch(err){
+    showToast(`Erreur : ${err.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent='Créer la compétition';
+  }
 }
 
 async function triggerCloture(){
