@@ -82,6 +82,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .detail-section h3{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px}
 .equipes-list{display:flex;flex-direction:column;gap:8px}
 .equipe-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #f0eeea;border-radius:8px}
+.log-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #f0eeea;border-radius:8px;margin-bottom:8px}
+.log-icon{font-size:16px}
+.log-info{flex:1;min-width:0}
+.log-title{font-size:12px;font-weight:600;color:#1B2A4A}
+.log-meta{font-size:11px;color:#888;margin-top:2px}
+.log-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.badge-originale{background:#d4edda;color:#155724}
+.badge-rectificative{background:#fff3cd;color:#856404}
+.badge-capitaine{background:#e2e3f5;color:#3730a3}
+.badge-joueur{background:#e8e6e0;color:#555}
+.log-link{font-size:11px;color:#1B2A4A;font-weight:600;text-decoration:none;flex-shrink:0}
+.log-link:hover{text-decoration:underline}
 .equipe-nom{font-size:13px;font-weight:500;color:#1B2A4A;flex:1}
 .equipe-joueurs{font-size:11px;color:#888}
 .equipe-statut{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
@@ -183,6 +195,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <button class="btn-make" id="btn-make" onclick="triggerCloture()">⚡ Clôturer et générer la fiche compétition</button>
         <div class="action-note">Déclenche le scénario Make : statut → Inscriptions clôturées → fiche Google Doc → email Ops</div>
       </div>
+      <div class="detail-section"><h3>📄 Fiches compétition</h3><div id="detail-documents"><div class="loading">Chargement...</div></div></div>
+      <div class="detail-section"><h3>📧 E-mails envoyés</h3><div id="detail-emails"><div class="loading">Chargement...</div></div></div>
     </div>
   </div>
 </div>
@@ -285,7 +299,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 
 <script>
 let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null,unsubEquipeId=null,addPlayerMode='new';
-const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9',TABLE_CLUB='tbl3FI7FOOUycW7ej';
+const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9',TABLE_CLUB='tbl3FI7FOOUycW7ej',TABLE_DOCS='Journal_Documents',TABLE_MAILS='Journal_Emails';
 const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
 
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;setTimeout(()=>t.className='toast',3000)}
@@ -386,6 +400,56 @@ async function openDetail(id){
       return`<div class="equipe-row"><div class="equipe-nom">${e.fields['Equipe']||'—'}</div><div class="equipe-joueurs">${nb} joueur${nb>1?'s':''}</div><span class="equipe-statut ${sc}">${label}</span><div class="equipe-actions"><button class="btn-add-player" onclick="openAddPlayer('${e.id}','${nomEq}')">+ Joueur</button><button class="btn-remove-player" onclick="openUnsubscribe('${e.id}','${nomEq}')">− Désinscrire</button></div></div>`;
     }).join('')}</div><div class="section-foot"><button class="btn-add-player" onclick="openAddTeam()">+ Ajouter une équipe</button></div>`;
   }catch(err){document.getElementById('detail-equipes').innerHTML='<div class="empty">Erreur de chargement.</div>'}
+  loadDocumentsLog(id);
+  loadEmailsLog(id);
+}
+
+async function loadDocumentsLog(compId){
+  const box=document.getElementById('detail-documents');
+  box.innerHTML='<div class="loading">Chargement...</div>';
+  try{
+    const formula=encodeURIComponent(`FIND("${compId}", ARRAYJOIN({Compétition_Lien}))`);
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_DOCS}?filterByFormula=${formula}&sort[0][field]=Date_creation&sort[0][direction]=desc`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    if(!r.ok)throw new Error(`Erreur ${r.status}`);
+    const data=await r.json();
+    const docs=data.records||[];
+    if(!docs.length){box.innerHTML='<div class="empty">Aucune fiche générée pour cette compétition.</div>';return}
+    box.innerHTML=docs.map(d=>{
+      const type=d.fields['Type']||'—';
+      const badge=type==='Fiche rectificative'?'badge-rectificative':'badge-originale';
+      const date=d.fields['Date_creation']?new Date(d.fields['Date_creation']).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+      const lien=d.fields['Lien_document']||'#';
+      return`<div class="log-row"><div class="log-icon">📄</div><div class="log-info"><div class="log-title">${type}</div><div class="log-meta">${date}</div></div><span class="log-badge ${badge}">${type==='Fiche rectificative'?'Rectificative':'Originale'}</span><a class="log-link" href="${lien}" target="_blank">Ouvrir →</a></div>`;
+    }).join('');
+  }catch(err){
+    box.innerHTML='<div class="empty">Table "Journal_Documents" introuvable ou vide — vérifie qu\'elle existe dans Airtable.</div>';
+  }
+}
+
+async function loadEmailsLog(compId){
+  const box=document.getElementById('detail-emails');
+  box.innerHTML='<div class="loading">Chargement...</div>';
+  try{
+    const formula=encodeURIComponent(`FIND("${compId}", ARRAYJOIN({Compétition_Lien}))`);
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_MAILS}?filterByFormula=${formula}&sort[0][field]=Date_envoi&sort[0][direction]=desc`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    if(!r.ok)throw new Error(`Erreur ${r.status}`);
+    const data=await r.json();
+    const mails=data.records||[];
+    if(!mails.length){box.innerHTML='<div class="empty">Aucun e-mail enregistré pour cette compétition.</div>';return}
+    box.innerHTML=mails.map(m=>{
+      const type=m.fields['Type']||'—';
+      const isCapitaine=type.includes('Capitaine');
+      const badge=isCapitaine?'badge-capitaine':'badge-joueur';
+      const dest=m.fields['Destinataire_nom']||m.fields['Destinataire_email']||'—';
+      const sujet=m.fields['Sujet']||'';
+      const date=m.fields['Date_envoi']?new Date(m.fields['Date_envoi']).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+      return`<div class="log-row"><div class="log-icon">✉️</div><div class="log-info"><div class="log-title">${dest} — ${sujet}</div><div class="log-meta">${date}</div></div><span class="log-badge ${badge}">${type}</span></div>`;
+    }).join('');
+  }catch(err){
+    box.innerHTML='<div class="empty">Table "Journal_Emails" introuvable ou vide — vérifie qu\'elle existe dans Airtable.</div>';
+  }
 }
 
 function closeDetail(){selectedComp=null;document.getElementById('detail-panel').classList.remove('open');applyFilters()}
