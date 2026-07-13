@@ -3,579 +3,302 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlayOff / WePlay — Dossier de soutenance</title>
+<title>PlayOff / WePlay — Projet Professionnel</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Georgia,'Times New Roman',serif;background:#f5f4f0;color:#1a1a1a;font-size:13px;line-height:1.7}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
 
-/* Boutons hors impression */
-.no-print{position:fixed;top:16px;right:16px;display:flex;flex-direction:column;gap:8px;z-index:999}
-.btn-action{padding:8px 14px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
-.btn-print{background:#1B2A4A;color:#fff}
-.btn-print:hover{background:#142036}
-.btn-toc{background:#fff;color:#1B2A4A;border:1px solid #1B2A4A}
+/* Header */
+.header{background:#1B2A4A;padding:0 3rem;display:flex;align-items:center;height:64px;gap:16px}
+.logo{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.logo span{color:#E8511A}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-left:4px;font-weight:400}
 
-/* Page wrapper */
-.page{max-width:900px;margin:0 auto;background:#fff;box-shadow:0 0 40px rgba(0,0,0,0.08)}
+/* Hero */
+.hero{background:#1B2A4A;padding:60px 3rem 70px;color:#fff;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-60px;width:400px;height:400px;background:rgba(232,81,26,0.08);border-radius:50%}
+.hero-tag{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#E8511A;margin-bottom:14px}
+.hero h1{font-size:36px;font-weight:800;line-height:1.15;margin-bottom:12px;max-width:600px}
+.hero h1 span{color:#E8511A}
+.hero-desc{font-size:14px;opacity:0.7;max-width:520px;line-height:1.7;margin-bottom:28px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap}
+.hero-meta-item{font-size:12px;opacity:0.6;display:flex;align-items:center;gap:6px}
+.hero-meta-item strong{opacity:1;color:#fff}
 
-/* Page de couverture */
-.cover{background:#1B2A4A;color:#fff;padding:80px 60px;min-height:340px;display:flex;flex-direction:column;justify-content:center}
-.cover-tag{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:20px}
-.cover h1{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:8px}
-.cover h1 span{color:#E8511A}
-.cover-sub{font-size:16px;opacity:0.8;margin-bottom:32px;font-style:italic}
-.cover-meta{border-top:1px solid rgba(255,255,255,0.2);padding-top:20px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;opacity:0.7;line-height:2}
-.cover-bloc{background:rgba(255,255,255,0.1);border-left:3px solid #E8511A;padding:14px 18px;margin-top:24px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;border-radius:0 6px 6px 0}
+/* Main layout */
+.main{max-width:1000px;margin:0 auto;padding:3rem 2rem}
 
-/* Table des matières */
-.toc{padding:40px 60px;border-bottom:1px solid #eee}
-.toc h2{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:14px;font-weight:700;color:#1B2A4A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:20px}
-.toc-bloc{margin-bottom:16px}
-.toc-bloc-title{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:11px;font-weight:700;color:#E8511A;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
-.toc-item{display:flex;align-items:baseline;gap:6px;padding:4px 0;border-bottom:1px dotted #ddd;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px}
-.toc-item a{color:#1B2A4A;text-decoration:none;flex:1}
-.toc-item a:hover{color:#E8511A}
-.toc-item .toc-num{font-weight:700;color:#1B2A4A;min-width:40px}
-.toc-item .toc-statut{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
-.ts-fait{background:#d4edda;color:#155724}
-.ts-cours{background:#fff3cd;color:#856404}
-.ts-todo{background:#f8d7da;color:#721c24}
+/* Section titre */
+.section-label{font-size:11px;font-weight:700;color:#E8511A;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px}
+.subsection-label{font-size:10px;font-weight:700;color:#8a8a8a;text-transform:uppercase;letter-spacing:0.07em;margin:20px 0 10px}
 
-/* En-tête de question */
-.question-section{padding:0 60px 60px}
-.q-header{background:#1B2A4A;color:#fff;padding:18px 24px;margin:40px -60px 32px;display:flex;align-items:baseline;gap:16px}
-.q-num{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:22px;font-weight:700;color:#E8511A;min-width:60px}
-.q-title{font-size:15px;font-weight:600;line-height:1.3}
-.q-comp{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:10px;font-weight:600;background:rgba(232,81,26,0.3);padding:3px 9px;border-radius:10px;margin-left:auto;white-space:nowrap}
+/* Projets */
+.projets{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:3rem}
+.projet-card{background:#fff;border-radius:14px;border:1px solid #e8e6e0;overflow:hidden;transition:box-shadow 0.2s}
+.projet-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.08)}
+.projet-head{padding:20px 22px 14px;border-bottom:1px solid #f0eeea}
+.projet-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;margin-bottom:10px}
+.p1-badge{background:#EAF1FB;color:#185FA5}
+.p2-badge{background:#F0EBF8;color:#8C3EF4}
+.projet-head h2{font-size:16px;font-weight:700;color:#1B2A4A;margin-bottom:4px}
+.projet-head p{font-size:12px;color:#888;line-height:1.5}
+.projet-body{padding:16px 22px}
+.projet-tools{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.tool-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
+.t1{background:#EAF1FB;color:#185FA5}
+.t2{background:#F0EBF8;color:#8C3EF4}
+.projet-statut{font-size:11px;color:#888;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.statut-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot-done{background:#28a745}
+.dot-cours{background:#ffc107}
 
-/* Énoncé */
-.q-enonce{font-style:italic;color:#555;background:#f9f8f5;border-left:3px solid #E8511A;padding:12px 16px;margin-bottom:24px;font-size:12px;border-radius:0 6px 6px 0}
+/* Liens outils */
+.outils-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:3rem}
+.outil-card{background:#fff;border-radius:12px;border:1px solid #e8e6e0;padding:20px;text-decoration:none;color:inherit;transition:all 0.2s;display:flex;flex-direction:column;gap:10px}
+.outil-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);border-color:#1B2A4A;transform:translateY(-2px)}
+.outil-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.icon-manager{background:#EAF1FB}
+.icon-suivi{background:#FFF3CD}
+.icon-figma{background:#F0EBF8}
+.icon-bubble{background:#EDE9FB}
+.icon-weplay{background:#F3EEFF}
+.icon-word{background:#E8F4E8}
+.outil-card.externe{border-style:dashed}
+.outil-label{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.06em}
+.outil-title{font-size:14px;font-weight:700;color:#1B2A4A;line-height:1.3}
+.outil-desc{font-size:12px;color:#888;line-height:1.5;flex:1}
+.outil-cta{font-size:11px;font-weight:700;color:#1B2A4A;display:flex;align-items:center;gap:4px}
+.outil-cta::after{content:'→'}
 
-/* Contenu */
-.q-content{font-size:13px;line-height:1.75}
-.q-content p{margin-bottom:12px}
-.q-content strong{font-weight:700;color:#1B2A4A}
-.q-content em{font-style:italic;color:#555}
-.q-content h3{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:13px;font-weight:700;color:#1B2A4A;margin:20px 0 8px;border-bottom:1px solid #eee;padding-bottom:5px}
-.q-content h4{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;font-weight:700;color:#E8511A;margin:16px 0 6px}
+/* Suivi de projet */
+.suivi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
+.suivi-card{background:#fff;border-radius:10px;border:1px solid #e8e6e0;padding:14px 16px;text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;transition:all 0.2s}
+.suivi-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.07);border-color:#1B2A4A;transform:translateY(-1px)}
+.suivi-icon{font-size:22px;flex-shrink:0}
+.suivi-info{flex:1}
+.suivi-title{font-size:13px;font-weight:600;color:#1B2A4A;margin-bottom:2px}
+.suivi-desc{font-size:11px;color:#888;line-height:1.4}
+.suivi-cta{font-size:11px;font-weight:600;color:#aaa;white-space:nowrap}
+.suivi-card:hover .suivi-cta{color:#1B2A4A}
 
-/* Tables */
-.q-content table{width:100%;border-collapse:collapse;margin:16px 0;font-size:12px}
-.q-content table th{background:#1B2A4A;color:#fff;padding:9px 12px;text-align:left;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-weight:600;font-size:11px}
-.q-content table td{padding:9px 12px;border:1px solid #e0ddd5;vertical-align:top;line-height:1.5}
-.q-content table tr:nth-child(even) td{background:#faf9f6}
-.q-content table tr:hover td{background:#f0eee8}
-/* Table encadrée (1 ligne = bloc texte) */
-.q-content table.bloc-table td{background:#f0f4fa;border:1px solid #c5d5e8;font-style:italic;padding:14px 16px}
-.q-content table.bloc-orange td{background:#fff8f5;border:1px solid #f5c5a8;padding:14px 16px}
+/* Bubble bloc */
+.bubble-bloc{background:#fff;border-radius:14px;border:2px dashed #d0c8f0;padding:24px;display:flex;align-items:center;gap:20px;transition:box-shadow 0.2s,border-color 0.2s}
+.bubble-bloc:hover{box-shadow:0 4px 16px rgba(140,62,244,0.12);border-color:#8C3EF4}
+.bubble-icon{width:56px;height:56px;border-radius:14px;background:#F0EBF8;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.bubble-info h3{font-size:15px;font-weight:700;color:#1B2A4A;margin-bottom:4px}
+.bubble-info p{font-size:12px;color:#888;line-height:1.5}
+.bubble-badge{font-size:10px;font-weight:700;background:#fff3cd;color:#856404;padding:2px 8px;border-radius:10px;margin-top:6px;display:inline-block}
 
-/* Liste */
-.q-content ul{margin:8px 0 12px 20px}
-.q-content ul li{margin-bottom:4px}
+/* Footer */
+.footer{border-top:1px solid #e8e6e0;padding:20px 3rem;font-size:11px;color:#aaa;display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto}
 
-/* Encadré remarque Claude */
-.claude-note{background:#EEF2FF;border:1px solid #9BA5F5;border-left:4px solid #8C3EF4;padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:11.5px;color:#3730A3}
-.claude-note strong{color:#4338CA;display:block;margin-bottom:4px}
-
-/* Placeholder à rédiger */
-.todo-section{padding:0 60px 60px}
-.todo-placeholder{background:#fafafa;border:2px dashed #ddd;border-radius:10px;padding:32px;text-align:center;color:#aaa;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
-.todo-placeholder h3{font-size:14px;font-weight:600;color:#bbb;margin-bottom:6px}
-.todo-placeholder p{font-size:12px}
-.todo-q-header{background:#e8e6e0;padding:18px 24px;margin:40px -60px 32px;display:flex;align-items:baseline;gap:16px}
-.todo-q-header .q-num{color:#bbb}
-.todo-q-header .q-title{font-size:14px;color:#999}
-
-/* Pied de page de section */
-.section-footer{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:10px;color:#aaa;text-align:right;padding:0 60px 12px;border-top:1px solid #f0eeea;padding-top:12px;margin-top:8px}
-
-/* Séparateur de blocs */
-.bloc-divider{background:#1B2A4A;color:#fff;padding:14px 60px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
-.bloc-divider span{color:#E8511A}
-
-@media print{
-  @page{size:A4 portrait;margin:1.5cm 1.5cm 1.5cm 1.5cm}
-  .no-print{display:none}
-  body{background:#fff;font-size:11px}
-  .page{box-shadow:none;max-width:none;margin:0;padding:0}
-  .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:60px 40px;page-break-after:always;min-height:auto}
-  .toc{page-break-after:always;padding:30px 40px}
-  .bloc-divider{-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-before:always;page-break-after:avoid;margin:0;padding:14px 40px}
-  .question-section{page-break-before:always;page-break-inside:avoid;padding:0 40px 30px}
-  .todo-section .todo-q-header{page-break-before:always;page-break-after:avoid;margin:0 -40px 20px}
-  .todo-section .todo-placeholder{page-break-inside:avoid}
-  .todo-section{padding:0 40px 30px}
-  .q-header{-webkit-print-color-adjust:exact;print-color-adjust:exact;margin:20px -40px 20px;padding:14px 18px;page-break-after:avoid}
-  .q-content table{page-break-inside:avoid;font-size:10px}
-  .q-content h3{page-break-after:avoid}
-  .q-content h4{page-break-after:avoid}
-  .section-footer{-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:8px 40px;margin-top:10px}
-  .cover h1{font-size:26px}
-  .q-content{font-size:11px;line-height:1.6}
-  .q-enonce{font-size:11px}
+@media(max-width:700px){
+  .hero{padding:40px 1.5rem 50px}
+  .hero h1{font-size:26px}
+  .main{padding:1.5rem 1rem}
+  .projets{grid-template-columns:1fr}
+  .suivi-grid{grid-template-columns:1fr 1fr}
+  .outils-grid{grid-template-columns:1fr 1fr}
+  .bubble-bloc{flex-direction:column;text-align:center}
+  .header{padding:0 1.5rem}
 }
 </style>
 </head>
 <body>
 
-<div class="no-print">
-  <a href="/" class="btn-action btn-toc" style="text-decoration:none;text-align:center">← Accueil</a>
-  <button class="btn-action btn-print" onclick="window.print()">🖨 Imprimer / PDF</button>
+<div class="header">
+  <div class="logo">PLAY<span>OFF</span><span class="logo-sub">/ WePlay</span></div>
 </div>
 
-<div class="page">
-
-<!-- COUVERTURE -->
-<div class="cover">
-  <div class="cover-tag">Dossier écrit de soutenance</div>
-  <h1>PlayOff Amateurs<br><span>WePlay</span></h1>
-  <div class="cover-sub">Bootcamp Product Builder No-Code</div>
-  <div class="cover-meta">
-    RNCP 39108 — École Cube<br>
-    Sandrine Darrieu — Juin 2026
-  </div>
-  <div class="cover-bloc">
-    <strong>Périmètre de ce dossier</strong><br>
-    Bloc 1 : Concevoir et piloter un projet de solution No-Code (Q1.1 à Q1.5) — <strong>Rédigé ✅</strong><br>
-    Bloc 2 : Réaliser le développement technique d'une solution No-Code (Q2.1 à Q2.4) — <strong>Rédigé ✅</strong><br>
-    Bloc 3 : Concevoir, configurer et paramétrer les outils métiers (Q3.1 à Q3.3) — <strong>Rédigé ✅</strong><br>
-    Bloc 4 : Assurer la sécurité, la conformité et la gestion des données (Q4.1 à Q4.4) — <strong>Rédigé ✅</strong>
+<div class="hero">
+  <div class="hero-tag">Bootcamp Product Builder No-Code — École Cube</div>
+  <h1>Projet Professionnel<br><span>RNCP 39108</span></h1>
+  <div class="hero-desc">12 semaines de mission chez PlayOff Amateurs — structuration des données, automatisation des flux, et conception de WePlay, une nouvelle application de location de terrains entre amis.</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Sandrine Darrieu</strong></div>
+    <div class="hero-meta-item"><strong>Juin 2026</strong></div>
+    <div class="hero-meta-item"><strong>2 projets</strong> · 7 outils · 12 semaines</div>
   </div>
 </div>
 
-<!-- TABLE DES MATIÈRES -->
-<div class="toc" id="toc">
-  <h2>Table des matières</h2>
+<div class="main">
 
-  <div class="toc-bloc">
-    <div class="toc-bloc-title">Bloc 1 — Concevoir et piloter un projet No-Code</div>
-    <div class="toc-item"><span class="toc-num">Q1.1</span><a href="#q11">Analyse des besoins et choix de plateformes</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q1.2</span><a href="#q12">Parties prenantes et accessibilité</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q1.3</span><a href="#q13">Benchmark — Outil d'audit IA (OMNI)</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q1.4</span><a href="#q14">Maquettage et expérience utilisateur</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q1.5</span><a href="#q15">Planification et pilotage du projet</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+  <!-- Les 2 projets -->
+  <div class="section-label">Les deux projets de mission</div>
+  <div class="projets">
+    <div class="projet-card">
+      <div class="projet-head">
+        <span class="projet-badge p1-badge">Projet 1</span>
+        <h2>Organisation interne PlayOff</h2>
+        <p>Structurer et automatiser la gestion des compétitions sportives amateurs à l'échelle nationale.</p>
+      </div>
+      <div class="projet-body">
+        <div class="projet-tools">
+          <span class="tool-tag t1">Notion</span>
+          <span class="tool-tag t1">Airtable</span>
+          <span class="tool-tag t1">Make</span>
+          <span class="tool-tag t1">Gmail</span>
+          <span class="tool-tag t1">Google Docs</span>
+          <span class="tool-tag t1">Google Calendar</span>
+        </div>
+        <div class="projet-statut"><span class="statut-dot dot-done"></span>Semaines 1 à 5 · <strong>Terminé</strong></div>
+      </div>
+    </div>
+    <div class="projet-card">
+      <div class="projet-head">
+        <span class="projet-badge p2-badge">Projet 2</span>
+        <h2>WePlay</h2>
+        <p>Concevoir et développer une application de location de terrains de sport entre amis.</p>
+      </div>
+      <div class="projet-body">
+        <div class="projet-tools">
+          <span class="tool-tag t2">Notion</span>
+          <span class="tool-tag t2">Figma</span>
+          <span class="tool-tag t2">Lovable</span>
+          <span class="tool-tag t2">Bubble</span>
+        </div>
+        <div class="projet-statut"><span class="statut-dot dot-cours"></span>Semaines 6 à 12 · <strong>En cours</strong></div>
+      </div>
+    </div>
   </div>
 
-  <div class="toc-bloc">
-    <div class="toc-bloc-title">Bloc 2 — Réaliser le développement technique d'une solution No-Code</div>
-    <div class="toc-item"><span class="toc-num">Q2.1</span><a href="#q21">Conception d'interface utilisateur</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q2.2</span><a href="#q22">Architecture de données</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q2.3</span><a href="#q23">Intégrations, APIs et sécurisation</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q2.4</span><a href="#q24">Documentation technique</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+  <!-- Les outils de démonstration -->
+  <div class="section-label">Outils de démonstration</div>
+
+  <div class="subsection-label">Outils demandés</div>
+  <div class="outils-grid">
+    <a href="https://www.figma.com/proto/XDPH6sF56nPtYSCk1A7Ggn/WePlay?node-id=21-872&t=PM6H8AjOmyDl9mr8-0&scaling=min-zoom&content-scaling=fixed&page-id=21%3A845" target="_blank" class="outil-card externe">
+      <div class="outil-icon icon-figma">🎨</div>
+      <div>
+        <div class="outil-label">Projet 2 · Design</div>
+        <div class="outil-title">WePlay — Figma (prototype interactif)</div>
+      </div>
+      <div class="outil-desc">Prototype cliquable WePlay — Design System #8C3EF4, parcours joueur (connexion → réservation → récapitulatif → confirmation).</div>
+      <div class="outil-cta">Ouvrir le prototype Figma</div>
+    </a>
+    <a href="https://courtly-tap.lovable.app/" target="_blank" class="outil-card externe">
+      <div class="outil-icon icon-lovable">⚡</div>
+      <div>
+        <div class="outil-label">Projet 2 · Prototype fonctionnel</div>
+        <div class="outil-title">WePlay — Lovable</div>
+      </div>
+      <div class="outil-desc">Parcours complet : Homepage → Sélection → Récapitulatif → Paiement → Confirmation. Connecté à Supabase (terrains réels) et Stripe en mode test. Palette #8C3EF4.</div>
+      <div class="outil-cta">Ouvrir la démo</div>
+    </a>
+    <a href="https://weplay-website.bubbleapps.io/version-test?debug_mode" target="_blank" class="outil-card externe">
+      <div class="outil-icon icon-bubble">🫧</div>
+      <div>
+        <div class="outil-label">Projet 2 · Application</div>
+        <div class="outil-title">WePlay — Bubble</div>
+      </div>
+      <div class="outil-desc">Application NoCode WePlay en cours de développement — connexion, liste terrains, création de session, réservation. Sprints 5–6.</div>
+      <div class="outil-cta">Ouvrir Bubble</div>
+    </a>
   </div>
 
-  <div class="toc-bloc">
-    <div class="toc-bloc-title">Bloc 3 — Concevoir, configurer et paramétrer les outils métiers</div>
-    <div class="toc-item"><span class="toc-num">Q3.1</span><a href="#q31">Logique métier et traitement des données</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q3.2</span><a href="#q32">Tableaux de bord et datavisualisation</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q3.3</span><a href="#q33">Collaboration et synchronisation</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+  <div class="subsection-label">Suivi du projet en direct — Proposition d'amélioration</div>
+  <div class="outils-grid">
+    <a href="/manager" class="outil-card">
+      <div class="outil-icon icon-manager">📊</div>
+      <div>
+        <div class="outil-label">Projet 1 · Live</div>
+        <div class="outil-title">Suivi des compétitions — PlayOff</div>
+      </div>
+      <div class="outil-desc">Interface connectée à Airtable en temps réel — compétitions, équipes, statuts, déclenchement Make.</div>
+      <div class="outil-cta">Ouvrir le dashboard</div>
+    </a>
+    <a href="/weplay" class="outil-card">
+      <div class="outil-icon icon-weplay">🏟️</div>
+      <div>
+        <div class="outil-label">Projet 2 · Substitut fonctionnel</div>
+        <div class="outil-title">WePlay — Version Vercel (Airtable + Stripe)</div>
+      </div>
+      <div class="outil-desc">Parcours complet de réservation en HTML : sport → terrain (tarifs réels Airtable) → récapitulatif → paiement Stripe (test) → confirmation. Alternative fonctionnelle pendant la finalisation de Bubble.</div>
+      <div class="outil-cta">Ouvrir la démo</div>
+    </a>
+    <a href="https://airtable.com/appPLxLdTDDnOi4Um" target="_blank" class="outil-card externe">
+      <div class="outil-icon">🗂</div>
+      <div>
+        <div class="outil-label">Pilotage · Bienvenue</div>
+        <div class="outil-title">Base Airtable — Bienvenue</div>
+      </div>
+      <div class="outil-desc">Roadmap · Backlog · Sprint Review — pilotage partagé du projet, accessible en direct.</div>
+      <div class="outil-cta">Ouvrir la base Airtable</div>
+    </a>
   </div>
 
-  <div class="toc-bloc">
-    <div class="toc-bloc-title">Bloc 4 — Assurer la sécurité, la conformité et la gestion des données</div>
-    <div class="toc-item"><span class="toc-num">Q4.1</span><a href="#q41">Évaluation et audit de sécurité</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q4.2</span><a href="#q42">Sauvegarde et gestion d'incidents</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q4.3</span><a href="#q43">Protection des données et conformité RGPD</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
-    <div class="toc-item"><span class="toc-num">Q4.4</span><a href="#q44">Sensibilisation des équipes</a><span class="toc-statut ts-fait">✓ Rédigé</span></div>
+  <!-- Outils de suivi -->
+  <div class="section-label">Outils de suivi de projet</div>
+  <div class="suivi-grid">
+    <a href="/suivi" class="suivi-card">
+      <div class="suivi-icon">🗓</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Suivi des sprints</div>
+        <div class="suivi-desc">Tableau de bord des 12 semaines — attendus, statuts et livrables par sprint</div>
+      </div>
+      <div class="suivi-cta">Voir →</div>
+    </a>
+    <a href="https://app.notion.com/p/LA-ROADMAP-389e07a89d84801ab213f8251eab12f2" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📊</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Roadmap · Sprints · Log</div>
+        <div class="suivi-desc">Roadmap 12 semaines · Sprint Reviews · journal de mission et décisions</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+    <a href="https://app.notion.com/p/Workshop-PlayOff-Amateurs-350a007cf7c7808fbff2d50186030ba4" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📁</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Dossier Sandrine</div>
+        <div class="suivi-desc">Workspace PlayOff — travail au jour le jour, résumés, documentation source</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+    <a href="https://app.notion.com/p/LES-SPRINTS-389e07a89d848063babadfe6cbc4e1b2" target="_blank" class="suivi-card">
+      <div class="suivi-icon">🔄</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Sprint Reviews</div>
+        <div class="suivi-desc">Réalisations, décisions, arbitrages et risques — bi-hebdomadaires</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
+    <a href="https://app.notion.com/p/LES-LOGS-389e07a89d84802b882ddfcc5e5592a7" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📝</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Journal de mission</div>
+        <div class="suivi-desc">Travail au jour le jour · notes · comptes-rendus · décisions techniques</div>
+      </div>
+      <div class="suivi-cta">Notion →</div>
+    </a>
   </div>
+
+  <!-- Dossier de soutenance -->
+  <div class="section-label">Dossier de soutenance</div>
+  <div class="suivi-grid" style="grid-template-columns:repeat(2,1fr)">
+    <a href="/dossier" class="suivi-card">
+      <div class="suivi-icon">🏆</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Suivi du dossier de soutenance</div>
+        <div class="suivi-desc">Blocs 1 à 4 · Q1.1 à Q4.4 — dossier complet ✅</div>
+      </div>
+      <div class="suivi-cta">Voir →</div>
+    </a>
+    <a href="https://github.com/sandrinedarrieu-bit/playoff-pro/raw/main/downlaod/Dossier_de_soutenance_final.pdf" target="_blank" class="suivi-card">
+      <div class="suivi-icon">📄</div>
+      <div class="suivi-info">
+        <div class="suivi-title">Dossier de soutenance — PDF final</div>
+        <div class="suivi-desc">Version finale — Blocs 1 à 4 rédigés et déposés ✅</div>
+      </div>
+      <div class="suivi-cta">⬇ .pdf</div>
+    </a>
+  </div>
+
 </div>
 
-<!-- ============================================================ -->
-<!-- BLOC 1 -->
-<!-- ============================================================ -->
-<div class="bloc-divider">Bloc 1 — <span>Concevoir et piloter un projet de solution No-Code</span></div>
-
-<!-- Q1.1 -->
-<div class="question-section" id="q11">
-  <div class="q-header">
-    <span class="q-num">Q1.1</span>
-    <span class="q-title">Analyse des besoins et choix de plateformes</span>
-    <span class="q-comp">C1, C2</span>
-  </div>
-  <div class="q-enonce">Présentez les besoins de votre projet, expliquez pourquoi les plateformes No-Code mobilisées sont adaptées, comparez leurs forces et limites au regard des spécificités du projet. 1 visuel max.</div>
-  <div class="q-content">
-    <h3>Contexte et besoins du projet</h3>
-    <table class="bloc-table"><tr><td>PlayOff Amateurs organisait ses compétitions sportives à l'aide de tableurs multiples, d'échanges email non structurés et d'outils hétérogènes — sans vision commune du cycle de vie d'une compétition. La mission consistait à introduire progressivement le NoCode pour : (1) structurer et centraliser les données opérationnelles, (2) automatiser les flux critiques, et (3) concevoir, prototyper et lancer WePlay, une nouvelle offre digitale de location de terrains entre amis.</td></tr></table>
-
-    <table>
-      <tr>
-        <th>Plateforme</th>
-        <th>Argument clé</th>
-        <th>Limites dans le contexte PlayOff</th>
-      </tr>
-      <tr><td><strong>Notion</strong></td><td>Documentation centralisée, suivi structuré du projet</td><td>Couche documentaire uniquement — déconnectée des données live (Airtable/Make). Risque de divergence si non synchronisée (3 versions de palette identifiées en cours de mission).</td></tr>
-      <tr><td><strong>Tally</strong></td><td>Formulaire de recueil des besoins, sans code</td><td>Nécessite une synchronisation supplémentaire via Make pour alimenter la base.</td></tr>
-      <tr><td><strong>Airtable</strong></td><td>Base relationnelle accessible aux non-développeurs</td><td>Automatisations natives et volume limités selon le plan ; formules de jointure complexes (FIND/ARRAYJOIN) pour les relations multi-niveaux.</td></tr>
-      <tr><td><strong>Make</strong></td><td>Automatisation sans code, connecteurs Google natifs (Gmail, Calendar, Docs)</td><td>Consommation d'opérations à surveiller ; trigger Watch Records nécessitant un champ Last Modified dédié.</td></tr>
-      <tr><td><strong>Figma</strong></td><td>Maquettes précises, identité visuelle cohérente</td><td>Ne génère pas de code ; retranscription manuelle vers Lovable/Bubble nécessaire. Risque d'incohérence si plusieurs versions du Design System circulent.</td></tr>
-      <tr><td><strong>Lovable</strong></td><td>Démo rapide, validation produit immédiate</td><td>Aucune base de données ni authentification réelle ; décalages observés build/déploiement. Non pensé pour la production.</td></tr>
-      <tr><td><strong>Bubble</strong></td><td>Logique applicative durable, sans code</td><td>Courbe d'apprentissage réelle ; non encore implémenté à ce stade (Sprint 5–6). Coût évolutif selon la montée en charge.</td></tr>
-      <tr><td><strong>ChatGPT / Claude</strong></td><td>Assistance rédactionnelle et génération de contenu</td><td>Vérification humaine systématique nécessaire — ne remplace pas la connaissance métier.</td></tr>
-      <tr><td><strong>GitHub</strong></td><td>Versionnement du code et des fichiers — historique complet des modifications, retour arrière possible à tout moment</td><td>Courbe de prise en main initiale (concepts de commit, push, branch). Usage en interface web (github.com) suffisant pour un profil no-code sans ligne de commande.</td></tr>
-      <tr><td><strong>Vercel</strong></td><td>Déploiement automatique à chaque modification GitHub — mise en ligne instantanée, URL publique stable, variables d'environnement sécurisées (tokens API)</td><td>Fonctions serverless soumises à des contraintes de runtime (version Node.js, format d'export) qui peuvent générer des erreurs de build si le vercel.json est mal configuré. Offre gratuite suffisante pour un usage portfolio/démo.</td></tr>
-    </table>
-
-    <table class="bloc-orange"><tr><td><em>La stack est volontairement progressive : outils internes d'abord (Notion, Airtable, Make), puis outils produit (Figma, Lovable, Bubble) dès que la mission évolue vers la création de WePlay. Ce séquençage limite les risques et permet d'apporter de la valeur rapidement à chaque sprint.</em></td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
+<div class="footer">
+  <span>Sandrine Darrieu — Juin 2026 · <a href="https://playoff-pro.vercel.app" target="_blank" style="color:#aaa">playoff-pro.vercel.app</a></span>
+  <span>PlayOff Amateurs / WePlay · RNCP 39108 · École Cube</span>
 </div>
 
-<!-- Q1.2 -->
-<div class="question-section" id="q12">
-  <div class="q-header">
-    <span class="q-num">Q1.2</span>
-    <span class="q-title">Parties prenantes et accessibilité</span>
-    <span class="q-comp">C3</span>
-  </div>
-  <div class="q-enonce">Décrivez la méthodologie utilisée pour recueillir les attentes des utilisateurs finaux. Précisez les adaptations envisagées pour les situations de handicap.</div>
-  <div class="q-content">
-    <h3>Le recueil des besoins a reposé sur quatre leviers complémentaires :</h3>
-
-    <h4>1 — Entretiens formalisés en comptes rendus (CR)</h4>
-    <p>Chaque échange avec Jérôme (Directeur des Opérations) et François (Directeur Général) fait l'objet d'un CR structuré : contexte, besoins exprimés, contraintes évoquées, décision retenue. Cette formalisation permet de tracer l'évolution des besoins au fil des sprints et de justifier les choix techniques a posteriori. Les CR couvrent 11 réunions de mission, du cadrage initial (Sprint 0) au lancement de WePlay (Sprint 4).</p>
-
-    <h4>2 — Ateliers de suivi itératifs (Sprint Reviews)</h4>
-    <p>Les Sprint Reviews bi-hebdomadaires fonctionnent comme de véritables ateliers : présentation de l'avancement, recueil des réactions à chaud, ajustement des priorités. C'est dans ce cadre que les demandes d'évolution ont émergé progressivement — validation des équipes (Sprint 2), préparation des compétitions (Sprint 3), puis lancement de WePlay (Sprint 4) — plutôt que d'être figées en amont.</p>
-
-    <h4>3 — Observation des processus internes</h4>
-    <p>Au-delà des entretiens déclaratifs, une analyse du fonctionnement réel des équipes a permis de faire émerger des besoins non formulés spontanément. Exemple concret : avant le scénario Make 1, la validation d'une équipe inscrite reposait sur des relances manuelles de Jérôme aux capitaines et joueurs, source d'oublis et de retards. C'est cette observation directe qui a permis de concevoir une automatisation adaptée à l'usage réel plutôt qu'à l'usage déclaré.</p>
-
-    <h4>4 — Questionnaire structuré (Tally)</h4>
-    <p>En complément des entretiens qualitatifs, un questionnaire Tally permet de recueillir des retours plus larges et quantifiables auprès des utilisateurs finaux (joueurs, capitaines, clubs) — utile pour valider une intention produit à plus grande échelle, au-delà du cercle restreint des interlocuteurs directs.</p>
-
-    <h3>Adaptations envisagées pour les situations de handicap</h3>
-    <table>
-      <tr><th>Axe</th><th>Mesure envisagée</th></tr>
-      <tr><td><strong>Accessibilité des questionnaires</strong></td><td>Questionnaires conçus pour être compatibles avec les lecteurs d'écran : structure logique, labels explicites, ratios de contraste respectant les recommandations WCAG.</td></tr>
-      <tr><td><strong>Alternative à l'entretien oral</strong></td><td>Pour les personnes en difficulté de communication verbale, le questionnaire écrit ou l'échange asynchrone constitue une alternative directement applicable.</td></tr>
-      <tr><td><strong>Accessibilité intégrée dès la conception</strong></td><td>La vigilance sur les interfaces (contrastes, navigation clavier, alternatives textuelles) est posée comme critère de conception dès le recueil de besoins, non comme correction ultérieure.</td></tr>
-      <tr><td><strong>Veille réglementaire</strong></td><td>L'European Accessibility Act (EAA), en vigueur depuis juin 2025, étend les obligations d'accessibilité aux services privés d'e-commerce — catégorie dans laquelle s'inscrit le module de réservation et de paiement de WePlay. PlayOff Amateurs relève aujourd'hui de l'exemption micro-entreprise, mais ce point mérite d'être suivi si l'activité se développe. Le référentiel technique RGAA (norme EN 301 549) reste la base à mobiliser si une mise en conformité s'avérait nécessaire.</td></tr>
-    </table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q1.3 -->
-<div class="question-section" id="q13">
-  <div class="q-header">
-    <span class="q-num">Q1.3</span>
-    <span class="q-title">Benchmark, sélection d'outils et rapport d'évaluation</span>
-    <span class="q-comp">C4, C6</span>
-  </div>
-  <div class="q-enonce">Présentez un benchmark réalisé pour sélectionner un outil, module ou service tiers. Critères retenus, notation, recommandation argumentée. Comment cette analyse a-t-elle facilité la prise de décision ? 1 visuel max.</div>
-  <div class="q-content">
-    <table class="bloc-table"><tr><td><strong>Contexte</strong> — Après la structuration initiale de la base Airtable (5 tables, semaine 2), un audit de la modélisation était nécessaire pour identifier les incohérences avant de lancer les automatisations Make. Trois approches ont été comparées : OMNI (IA native intégrée à Airtable), révision manuelle, et passage par un assistant IA généraliste (ChatGPT/Claude). <em>Critères retenus : intégration native à Airtable (sans export), rapidité du diagnostic, profondeur de l'analyse relationnelle, coût, adéquation au travail en solo.</em></td></tr></table>
-
-    <table>
-      <tr>
-        <th>Critère</th>
-        <th>OMNI (IA Airtable)</th>
-        <th>Révision manuelle</th>
-        <th>ChatGPT / Claude</th>
-      </tr>
-      <tr><td><strong>Intégration native Airtable</strong></td><td>★★★★★</td><td>★★★★★</td><td>★★</td></tr>
-      <tr><td><strong>Rapidité du diagnostic</strong></td><td>★★★★★</td><td>★★</td><td>★★★</td></tr>
-      <tr><td><strong>Profondeur analyse relationnelle</strong></td><td>★★★★</td><td>★★★</td><td>★★★★★</td></tr>
-      <tr><td><strong>Coût</strong></td><td>★★★★</td><td>★★★★★</td><td>★★★★</td></tr>
-      <tr><td><strong>Adéquation travail en solo</strong></td><td>★★★★★</td><td>★★★</td><td>★★★★</td></tr>
-      <tr><td><strong>Note globale</strong></td><td><strong>★★★★</strong></td><td><strong>★★★</strong></td><td><strong>★★★★</strong></td></tr>
-    </table>
-    <p><em>Notation à dire d'expert — usage réel d'OMNI sur la base PlayOff (243 contacts, 5 tables) et expériences comparatives sur d'autres projets.</em></p>
-
-    <h3>Recommandation : OMNI retenu</h3>
-    <table class="bloc-table"><tr><td>OMNI analyse directement dans Airtable, sans étape d'export ni reformulation du contexte — diagnostic obtenu en quelques minutes, recommandations formulées dans le vocabulaire Airtable (liens, lookups, Autonumber). Corrections réellement appliquées à la suite : liaison Contact ↔ Équipes/Clubs, simplification du nommage des champs techniques. Limite identifiée : certains cas spécifiques (ex. lien Disciplines ↔ Compétition) sont hors périmètre d'OMNI — un passage complémentaire par ChatGPT/Claude avec le contexte métier détaillé permet d'affiner ces points.</td></tr></table>
-
-    <p>Restitution pour la prise de décision : le diagnostic a été traduit en plan d'action dans le journal de mission (statut « corrigé » / « non retenu » + justification courte par recommandation). Ce format permet une lecture rapide de l'écart entre l'état initial et l'état cible, et constitue une preuve de traçabilité mobilisable en soutenance.</p>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q1.4 -->
-<div class="question-section" id="q14">
-  <div class="q-header">
-    <span class="q-num">Q1.4</span>
-    <span class="q-title">Maquettage et expérience utilisateur</span>
-    <span class="q-comp">C5</span>
-  </div>
-  <div class="q-enonce">Présentez votre maquette (wireframe ou prototype) et le parcours utilisateur illustré. Expliquez vos choix d'ergonomie et de design. 3 visuels max.</div>
-  <div class="q-content">
-    <p>Deux livrables ont exploré le parcours principal de WePlay : une maquette HTML interactive (connexion, réservation de créneau, récapitulatif des coûts, confirmation) et un prototype fonctionnel sous <strong>Lovable</strong>, connecté à une base <strong>Supabase</strong> (terrains réels : nom, ville, prix, sports disponibles) et à <strong>Stripe</strong> en mode test pour le paiement. Le parcours Lovable va jusqu'au bout : sélection d'un terrain avec prix affiché, récapitulatif qui reprend les vraies données choisies, paiement Stripe (Carte, Link, Amazon Pay, Klarna, Bancontact) et écran de confirmation avec référence de transaction. C'est ce prototype qui a permis de valider concrètement le calcul du prix et l'intégration paiement avant de les répliquer dans Bubble pour la version finale.</p>
-
-    <table class="bloc-table"><tr><td><strong>Écart identifié et corrigé entre les deux livrables :</strong> en comparant la maquette Figma et le prototype Lovable, je me suis rendu compte que le module de paiement avait été oublié dans la maquette Figma initiale — seul l'écran de récapitulatif y figurait, sans étape de paiement à proprement parler. Cet écran avait d'abord été ajouté côté Lovable (Stripe test) ; l'écran Figma correspondant a depuis été créé pour combler cet oubli, et figure désormais aux côtés des 4 autres écrans du parcours.</td></tr></table>
-
-    <p>Le parcours s'appuie sur le cas d'usage validé avec la Direction : un joueur amateur doit pouvoir repérer un terrain disponible près de chez lui, réserver un créneau et comprendre immédiatement le coût total et sa répartition entre amis, en un minimum d'étapes. Les choix d'ergonomie qui en découlent : une seule couleur d'action pour tous les CTA de conversion (cohérence et reconnaissance immédiate), une carte « terrain » réutilisée à l'identique dans la liste et le récapitulatif (pas de rupture visuelle entre les écrans), et l'affichage du montant par personne dès l'écran de récapitulatif plutôt qu'après confirmation — la friction principale identifiée pour ce type d'usage entre amis étant la question implicite « combien je dois, à qui ».</p>
-
-    <h3>User flow — Parcours joueur amateur (WePlay)</h3>
-    <table>
-      <tr><th>Étape</th><th>Contenu</th></tr>
-      <tr><td><strong>1. Connexion</strong></td><td>Point d'entrée du parcours</td></tr>
-      <tr><td><strong>2. Sélection</strong></td><td>Sport, terrain, date, créneau</td></tr>
-      <tr><td><strong>3. Récapitulatif</strong></td><td>Nombre de joueurs + coût total et par personne</td></tr>
-      <tr><td><strong>4. Paiement</strong></td><td>Stripe test — Carte, Link, Amazon Pay, Klarna, Bancontact</td></tr>
-      <tr><td><strong>5. Confirmation</strong></td><td>Référence de transaction + étapes suivantes</td></tr>
-    </table>
-    <p style="font-size:11.5px;color:#777"><em>Objectif produit : minimiser le nombre d'étapes entre la découverte d'un terrain et la réservation effective, et lever le plus tôt possible la friction « combien je dois, à qui » en affichant la répartition des frais dès le récapitulatif.</em></p>
-
-    <table class="bloc-orange"><tr><td><strong>Prototype Lovable</strong> (Supabase + Stripe test) — parcours complet avec données et paiement réels, déployé sur <strong>courtly-tap.lovable.app</strong>.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q1.5 -->
-<div class="question-section" id="q15">
-  <div class="q-header">
-    <span class="q-num">Q1.5</span>
-    <span class="q-title">Planification et pilotage du projet</span>
-    <span class="q-comp">C7, C8</span>
-  </div>
-  <div class="q-enonce">Comment planifier et piloter votre projet ? Jalons, outils de suivi, gestion des écarts ou imprévus. Collaboration entre équipes techniques et métier. 2 visuels max.</div>
-  <div class="q-content">
-    <p>Le pilotage du projet se répartit sur deux outils selon l'usage : <strong>Notion</strong> pour mon suivi personnel (journal de mission, dossier de soutenance, Page Sécurité), et une base <strong>Airtable dédiée (« Bienvenue »)</strong> pour le pilotage partagé avec l'équipe, structurée en trois tables liées entre elles : une <strong>Roadmap</strong> découpée en 6 sprints de 2 semaines, chacun associé à un objectif principal unique, aux outils mobilisés, à la nature du travail (structuration, modélisation, automatisation, design, développement, sécurisation) et à une fenêtre calendaire ; un <strong>Backlog</strong> unique (titre/catégorie, description, priorité, statut, sprint cible, dates, outils) couvrant l'ensemble des tâches et correctifs du projet plutôt que des backlogs séparés par chantier, pour garder une vision d'arbitrage globale des priorités ; un ensemble de fiches <strong>Sprint Review</strong> dupliquées toutes les deux semaines (objectif du sprint, réalisations liées au Backlog, décisions prises, arbitrages effectués, risques et points de vigilance, objectif du sprint suivant). Un tableau de bord (« Insights ») complète ce dispositif — détaillé en Q3.2.</p>
-
-    <h3>Visuel — Roadmap Airtable, 6 sprints</h3>
-    <table>
-      <tr><th>Sprint</th><th>Objectif principal</th><th>Les outils</th><th>Nature du travail</th></tr>
-      <tr><td><strong>1-2</strong></td><td>Structurer le pilotage projet et modéliser les premières tables</td><td>Notion</td><td>Structuration</td></tr>
-      <tr><td><strong>3-4</strong></td><td>Transformer Airtable en outil opérationnel exploitable</td><td>Notion, Airtable, Make</td><td>Structuration, Modélisation data</td></tr>
-      <tr><td><strong>5-6</strong></td><td>Industrialiser les automatisations avec Make</td><td>Notion, Airtable, Make</td><td>Structuration, Automatisation, Sécurisation</td></tr>
-      <tr><td><strong>7-8</strong></td><td>Concevoir l'UX/UI et produire une démo Lovable</td><td>Notion</td><td>Design, Développement</td></tr>
-      <tr><td><strong>9-10</strong></td><td>Développer le MVP sous Bubble</td><td>Notion, Airtable, Make</td><td>Développement</td></tr>
-      <tr><td><strong>11-12</strong></td><td>Sécuriser, documenter et finaliser le MVP</td><td>Notion, Airtable, Make</td><td>Sécurisation</td></tr>
-    </table>
-
-    <table class="bloc-orange"><tr><td>La Roadmap Airtable suit les 6 sprints avec un statut par sprint, ce qui donne en un coup d'œil l'état réel d'avancement plutôt qu'une planification figée. Sur la gestion des écarts : le passage d'Airtable à Make en semaine 4 illustre un imprévu traité dans ce cadre — la limite des automatisations natives a été documentée dans la Sprint Review correspondante comme un risque, arbitrée avec Jérôme, puis transformée en item de backlog priorisé sans décaler la roadmap globale. Sur la coordination technique/métier, le format a été volontairement direct plutôt que formalisé à l'excès : itérations avec Jérôme et François par partage de captures d'écran et sessions de débogage en temps réel sur les scénarios Make, pour que les arbitrages produit se prennent au contact immédiat du fonctionnement réel de l'outil plutôt qu'en réunion abstraite.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- ============================================================ -->
-<!-- BLOC 2 -->
-<!-- ============================================================ -->
-<div class="bloc-divider">Bloc 2 — <span>Réaliser le développement technique d'une solution No-Code</span></div>
-
-<!-- Q2.1 -->
-<div class="question-section" id="q21">
-  <div class="q-header">
-    <span class="q-num">Q2.1</span>
-    <span class="q-title">Conception d'interface utilisateur</span>
-    <span class="q-comp">C9</span>
-  </div>
-  <div class="q-enonce">Présentez la conception des interfaces utilisateur : identité visuelle, design system, architecture de l'information. 1 visuel max.</div>
-  <div class="q-content">
-    <h3>Design System v1.0 — WePlay</h3>
-    <p>Les interfaces s'appuient sur le Design System v1.0, désormais stabilisé sur ses 4 rôles de couleur : <strong>principale</strong> (violet #8C3EF4 — logo WePlay, carte d'icône, liens actifs), <strong>secondaire</strong> (violet clair #F3EEFF — fonds de carte, mise en valeur douce), <strong>neutre</strong> (gris/blanc #F4F4F5 — fonds, bordures, texte secondaire) et <strong>action</strong> (orange #FF8A00 — unique couleur de CTA sur tout le parcours, pour une reconnaissance immédiate du bouton qui fait avancer l'utilisateur).</p>
-    <p>Cette palette violet/orange a été retenue comme version définitive après itération — les versions antérieures (Navy/Orange, puis Violet/Bleu/Vert du brief initial) ont été abandonnées au profit de cette combinaison, plus simple à maintenir cohérente sur 4 rôles bien distincts sans couleur superflue. Barlow Condensed reste utilisée pour les titres (registre affirmé, adapté à l'univers sportif), DM Sans pour le texte courant (grande lisibilité en petite taille), avec des rayons de bordure cohérents sur les cartes et boutons pour une identité arrondie et accessible.</p>
-
-    <table>
-      <tr><th>Rôle</th><th>Couleur</th><th>Usage</th></tr>
-      <tr><td><strong>Principale</strong></td><td>#8C3EF4</td><td>Logo WePlay, carte d'icône, liens actifs</td></tr>
-      <tr><td><strong>Secondaire</strong></td><td>#F3EEFF</td><td>Fonds de carte, mise en valeur douce</td></tr>
-      <tr><td><strong>Neutre</strong></td><td>#F4F4F5</td><td>Fonds, bordures, texte secondaire</td></tr>
-      <tr><td><strong>Action</strong></td><td>#FF8A00</td><td>Unique couleur de CTA sur tout le parcours</td></tr>
-    </table>
-
-    <table class="bloc-orange"><tr><td>L'architecture de l'information sépare clairement ce qui relève de la découverte (liste des terrains, filtrage) de ce qui relève de l'engagement (création de session, réservation, répartition des frais), pour qu'un utilisateur comprenne à tout moment où il se situe dans le parcours.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q2.2 -->
-<div class="question-section" id="q22">
-  <div class="q-header">
-    <span class="q-num">Q2.2</span>
-    <span class="q-title">Architecture de données</span>
-    <span class="q-comp">C10</span>
-  </div>
-  <div class="q-enonce">Présentez la structure des bases de données mobilisées : modèle conceptuel, relations, permissions par rôle. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Deux modèles de données coexistent, correspondant à deux périmètres métier distincts. Le premier, dans Airtable, structure l'activité historique de PlayOff sur 5 tables : Compétition, Club, Équipe, Match, Contact (243 contacts à ce stade — voir l'audit OMNI en Q1.3). Le second, conçu pour WePlay, est volontairement plus simple qu'un modèle multi-joueurs collaboratif : il articule 4 objets — User, Terrain, Réservation et Paiement. Un User réserve directement un Terrain sur une date et un créneau donnés, indique un nombre de joueurs (champ simple, pas encore de comptes individuels liés), et règle sa réservation via un Paiement — sans notion d'organisateur ni de participants multiples pour l'instant.</p>
-
-    <table>
-      <tr><th>Rôle</th><th>Terrain</th><th>Réservation</th><th>Paiement</th></tr>
-      <tr><td><strong>Joueur</strong></td><td>Lecture</td><td>Créer, Lecture (sienne)</td><td>Créer (sien), Lecture (sien)</td></tr>
-      <tr><td><strong>Propriétaire terrain</strong></td><td>Créer, Modifier (siens)</td><td>Lecture (ses terrains)</td><td>Lecture (ses terrains)</td></tr>
-      <tr><td><strong>Admin</strong></td><td>Tout</td><td>Tout</td><td>Tout</td></tr>
-    </table>
-
-    <table class="bloc-orange"><tr><td>Le choix de séparer le modèle Airtable (piloté en interne par PlayOff) du modèle WePlay (exposé à des utilisateurs finaux externes) reflète des exigences de permissions et des cycles de vie distincts, plutôt qu'une fusion artificielle dans une base unique. Précision importante : seul le rôle Joueur est implémenté à ce stade dans le prototype (Figma + Lovable) ; Propriétaire de terrain et Admin restent des rôles modélisés dans la matrice de permissions mais pas encore développés en interface.</td></tr></table>
-
-    <p><strong>Schéma relationnel Airtable — PlayOff :</strong> Équipe est la table pivot centrale, seule reliée aux quatre autres. Club↔Équipe et Compétition↔Équipe sont en 1–N, Club↔Compétition est en N–N via les équipes engagées, Contact↔Équipe est en 1–N. Match relie une Compétition à exactement deux Équipes et calcule son propre statut à partir de la complétude de ces deux équipes.</p>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q2.3 -->
-<div class="question-section" id="q23">
-  <div class="q-header">
-    <span class="q-num">Q2.3</span>
-    <span class="q-title">Intégrations, APIs et sécurisation</span>
-    <span class="q-comp">C11, C12, C13</span>
-  </div>
-  <div class="q-enonce">Présentez les intégrations mises en place entre outils, les APIs mobilisées, et les mesures de sécurisation associées. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Deux scénarios Make relient Airtable à des outils tiers, désormais chaînés de bout en bout. Le premier se déclenche au passage d'une équipe au statut « complète » : mise à jour du statut Airtable, puis un routeur à 4 branches selon le contexte — e-mail au capitaine, e-mail aux joueurs, création d'un événement Google Calendar (limitée à une fois par équipe), et une 4ᵉ branche qui vérifie si les deux équipes de la compétition sont désormais complètes ; si oui, elle met à jour le statut de la compétition à « Inscriptions clôturées ». Ce changement déclenche à son tour le second scénario : génération automatique d'un Google Doc de briefing opérationnel puis envoi de ce document aux équipes Opérations. Toute la chaîne — de la validation d'une équipe jusqu'à la fiche de briefing envoyée — est donc automatisée sans intervention manuelle.</p>
-
-    <table class="bloc-table"><tr><td><strong>Exemple concret de sécurisation :</strong> le Google Doc généré était créé privé par défaut (accessible uniquement au compte Google connecté à Make), ce qui le rendait illisible pour les Ops malgré un lien correctement transmis. La correction a consisté à ajouter un module dédié de partage (Google Drive — « Get a Share Link »), configuré en accès « Anyone / Reader » : lecture seule pour quiconque a le lien, sans droit de modification.</td></tr></table>
-
-    <p>Sur la sécurisation des échanges, je m'appuie sur la <strong>Page Sécurité Make</strong> rédigée en continu au fil du projet : un inventaire des données traitées par chaque scénario, et des tableaux de risques classés par sévérité (données transmises, exposition potentielle, mesure de limitation retenue).</p>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q2.4 -->
-<div class="question-section" id="q24">
-  <div class="q-header">
-    <span class="q-num">Q2.4</span>
-    <span class="q-title">Documentation technique</span>
-    <span class="q-comp">C14</span>
-  </div>
-  <div class="q-enonce">Présentez un exemple de documentation technique produite pour le projet. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Mon meilleur exemple ici est le document de <strong>Passation opérationnelle</strong>, rédigé pour le Directeur des Opérations au moment où la gestion quotidienne d'Airtable et de Make lui a été transmise. Plutôt qu'une documentation technique générique, ce document est pensé pour un tiers non technique qui doit pouvoir agir seul : usage quotidien attendu (que vérifier, que faire en cas d'équipe bloquée), limites connues de la solution actuelle, calendrier de maintenance (quand revoir les scopes Make, quand vérifier les quotas), et une liste de contacts à solliciter en cas de blocage.</p>
-
-    <table class="bloc-orange"><tr><td>Cette structure répond à un objectif précis : que la personne qui reprend le projet puisse l'utiliser et le maintenir sans dépendre de moi au quotidien, tout en sachant précisément où sont les limites de ce qui a été livré — la documentation n'a de valeur que si elle permet une autonomie réelle, pas seulement une trace écrite.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- ============================================================ -->
-<!-- BLOC 3 -->
-<!-- ============================================================ -->
-<div class="bloc-divider">Bloc 3 — <span>Concevoir, configurer et paramétrer les outils métiers</span></div>
-
-<!-- Q3.1 -->
-<div class="question-section" id="q31">
-  <div class="q-header">
-    <span class="q-num">Q3.1</span>
-    <span class="q-title">Logique métier et traitement des données</span>
-    <span class="q-comp">C15, C16</span>
-  </div>
-  <div class="q-enonce">Présentez les règles de gestion mises en œuvre et les difficultés techniques rencontrées dans leur traitement. 1 visuel max.</div>
-  <div class="q-content">
-    <p>La logique métier repose sur des règles de gestion explicites, définies avec Jérôme puis traduites en champs et automatisations : une équipe est complète à partir de 5 joueurs rattachés et ne peut passer au statut « Inscription validée » que si elle est complète ; un match n'est valide que s'il a une date, exactement deux équipes rattachées, et que ces deux équipes sont complètes. Cette même logique de complétude sert aussi de déclencheur à l'échelle de la compétition : si les deux équipes le sont, le statut de la compétition passe automatiquement à « Inscriptions clôturées », ce qui déclenche la génération du Google Doc de briefing.</p>
-
-    <h4>Deux difficultés techniques réelles</h4>
-    <p><strong>Déclencheur Watch Records :</strong> un scénario s'exécutait sans erreur (« Aucune nouvelle donnée ») alors que le statut avait bien changé dans Airtable, parce que le champ utilisé comme trigger n'était pas un vrai champ « Last Modified Time » natif. Solution : créer des champs Last Modified Time dédiés sur la table Équipe, suivant explicitement le champ Statut.</p>
-    <p><strong>Comptage des équipes inscrites :</strong> la relation Compétition → Équipes n'étant pas directement filtrable dans Make, la solution retenue a été une formule <strong>FIND(...; ARRAYJOIN(...))</strong> côté Airtable, exposant un champ simple et directement exploitable par le scénario.</p>
-
-    <table class="bloc-orange"><tr><td>Un troisième scénario Make traite le cas inverse : une équipe déjà validée qui repasse sous 5 joueurs. Le scénario détecte ce retour à l'état « incomplète », met à jour le statut, notifie par e-mail le capitaine, et vérifie si la compétition avait déjà été clôturée pour avertir les personnes concernées de la réouverture du dossier. Ces deux ajustements illustrent une réalité du no-code : la logique la plus robuste se construit souvent en préparant le terrain côté base de données plutôt qu'en complexifiant l'automatisation elle-même.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q3.2 -->
-<div class="question-section" id="q32">
-  <div class="q-header">
-    <span class="q-num">Q3.2</span>
-    <span class="q-title">Tableaux de bord et datavisualisation</span>
-    <span class="q-comp">C17</span>
-  </div>
-  <div class="q-enonce">Présentez les tableaux de bord conçus pour le pilotage du projet et pour la Direction. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Le pilotage du projet s'appuie sur un tableau de bord Airtable dédié (interface « Management » → page « Insights », base « Bienvenue »), construit sur la table Backlog qui centralise l'ensemble des tâches à travers les 6 sprints : deux indicateurs numériques (% de tâches complétées, % de tâches en retard), un donut chart de répartition par statut, un bar chart du nombre de tâches par outil mobilisé, et une timeline. Au moment de la soutenance, le dashboard affiche 100% de tâches complétées et 0% de retard côté pilotage de projet.</p>
-
-    <p>Un second niveau de tableau de bord existe côté métier : le <strong>Manager PlayOff</strong> (playoff-pro.vercel.app/manager), connecté en direct à la base Airtable Playoff, présente une vue de synthèse par compétition ainsi qu'un système d'alerte visuelle pour les équipes en régression, permettant à Jérôme de repérer immédiatement une équipe qui repasse sous le seuil de complétude après validation.</p>
-
-    <table class="bloc-orange"><tr><td>Ce tableau de bord métier reste toutefois partiel : il couvre le suivi opérationnel courant (statuts, alertes) mais pas encore une lecture consolidée orientée décision (taux de remplissage par compétition, ratio d'équipes validées, suivi des créneaux WePlay en production) — vue de pilotage stratégique restant à concevoir avec la Direction des Opérations une fois le périmètre confirmé comme prioritaire.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q3.3 -->
-<div class="question-section" id="q33">
-  <div class="q-header">
-    <span class="q-num">Q3.3</span>
-    <span class="q-title">Collaboration et synchronisation</span>
-    <span class="q-comp">C18, C19</span>
-  </div>
-  <div class="q-enonce">Présentez les bonnes pratiques de collaboration mises en œuvre et la stratégie de synchronisation entre outils. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Le point de départ remonte au Sprint 1 : dès la structuration initiale de la base, la consigne posée était que « les données personnelles ne doivent pas être visibles dans toutes les vues Airtable par défaut ». Cette règle a guidé toutes les vues créées ensuite — chaque profil accède uniquement aux vues utiles à son rôle. J'ai poussé cette logique plus loin : chaque équipe dispose d'un lien de formulaire propre, pré-rempli et restreint à sa compétition et à son équipe, de sorte qu'un capitaine ne voie et ne puisse compléter que l'inscription de joueurs de sa propre équipe.</p>
-
-    <table class="bloc-table"><tr><td>Sur la synchronisation, le flux retenu est <strong>Airtable ↔ Make ↔ Google (Calendar, Docs, Gmail)</strong> : Airtable reste la source de vérité unique, Make lit une donnée, agit sur les outils Google, puis réécrit le résultat dans Airtable — aucune donnée n'est dupliquée dans un second système de stockage. Pour éviter les déclenchements en doublon, je m'appuie sur le champ Last_modified évoqué en Q3.1 : le déclencheur Watch Records ne réagit qu'à une modification réelle et horodatée.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- ============================================================ -->
-<!-- BLOC 4 -->
-<!-- ============================================================ -->
-<div class="bloc-divider">Bloc 4 — <span>Assurer la sécurité, la conformité et la gestion des données</span></div>
-
-<!-- Q4.1 -->
-<div class="question-section" id="q41">
-  <div class="q-header">
-    <span class="q-num">Q4.1</span>
-    <span class="q-title">Évaluation et audit de sécurité</span>
-    <span class="q-comp">C20, C22</span>
-  </div>
-  <div class="q-enonce">Présentez la méthodologie d'audit de sécurité utilisée et le plan de correctifs qui en découle. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Mon audit de sécurité s'appuie sur la <strong>Page Sécurité Make</strong>, tenue à jour tout au long du projet : un inventaire des données traitées par chaque scénario, et des tableaux de risques classés par sévérité (donnée exposée, scénario concerné, probabilité, impact, mesure de limitation retenue). Cette approche par scénario plutôt que par outil permet de repérer précisément où une donnée sensible transite.</p>
-
-    <table>
-      <tr><th>Horizon</th><th>Correctif prévu</th></tr>
-      <tr><td><strong>Court terme</strong></td><td>Migration de l'adresse e-mail générique des Ops vers des comptes nominatifs ; passage des droits de partage des Google Docs générés en lecture seule</td></tr>
-      <tr><td><strong>Moyen terme</strong></td><td>Rotation des tokens API utilisés par les connexions Make</td></tr>
-      <tr><td><strong>Long terme</strong></td><td>Mise en place de logs centralisés couvrant Airtable, Make et Bubble, plutôt que l'historique d'exécution dispersé outil par outil</td></tr>
-    </table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q4.2 -->
-<div class="question-section" id="q42">
-  <div class="q-header">
-    <span class="q-num">Q4.2</span>
-    <span class="q-title">Sauvegarde et gestion d'incidents</span>
-    <span class="q-comp">C21, C23</span>
-  </div>
-  <div class="q-enonce">Présentez la stratégie de sauvegarde et la procédure de gestion des incidents. 1 visuel max.</div>
-  <div class="q-content">
-    <p>La stratégie de sauvegarde combine les mécanismes natifs des outils (historique de révisions Airtable) et une vigilance particulière sur les exports réguliers, en attendant la mise en place des logs centralisés évoquée en Q4.1.</p>
-
-    <table class="bloc-orange"><tr><td>La procédure d'incident, formalisée dans la Page Sécurité Make, fixe des délais précis : <strong>moins d'une heure</strong> pour désactiver le scénario ou l'accès concerné dès qu'un incident est identifié, et <strong>moins de 72 heures</strong> pour déclarer l'incident à la CNIL en cas de fuite de données personnelles avérée — délai qui reprend directement l'obligation légale du RGPD. Entre ces deux bornes : qualification de l'incident, correction de la cause, restauration si nécessaire, puis communication à la Direction et, si des données personnelles sont concernées, aux personnes affectées.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q4.3 -->
-<div class="question-section" id="q43">
-  <div class="q-header">
-    <span class="q-num">Q4.3</span>
-    <span class="q-title">Protection des données et conformité RGPD</span>
-    <span class="q-comp">C24, C25</span>
-  </div>
-  <div class="q-enonce">Présentez les mesures de protection des données personnelles et de conformité RGPD. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Les données personnelles (contacts, joueurs) sont isolées dans des tables et champs dédiés, masquées par défaut dans les vues Airtable partagées et visibles uniquement dans les vues où leur usage est justifié — la règle posée dès le Sprint 1 (Q3.3).</p>
-
-    <table class="bloc-table"><tr><td>Sur la conformité RGPD, l'évolution prévue la plus concrète est l'ajout d'un champ <strong>« Désinscrit »</strong> sur la table Contact, pour matérialiser explicitement le droit d'opposition : une personne qui demande à ne plus être sollicitée est marquée ainsi plutôt que supprimée brutalement, ce qui préserve l'historique tout en respectant sa demande et en excluant automatiquement son contact des scénarios Make d'envoi. Les droits d'accès restent définis par rôle : un Contact ne voit et ne modifie que ses propres informations via le formulaire dédié.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Q4.4 -->
-<div class="question-section" id="q44">
-  <div class="q-header">
-    <span class="q-num">Q4.4</span>
-    <span class="q-title">Sensibilisation des équipes</span>
-    <span class="q-comp">C26</span>
-  </div>
-  <div class="q-enonce">Présentez les actions de sensibilisation des équipes aux bonnes pratiques de protection des données. 1 visuel max.</div>
-  <div class="q-content">
-    <p>Je n'ai pas formalisé de dispositif de sensibilisation dédié et présenté comme tel à Jérôme et François — je préfère le dire clairement plutôt que présenter une action que je ne pourrais pas défendre en détail à l'oral. Ceci étant, plusieurs règles de bonne pratique ont été posées et appliquées concrètement dès le Sprint 1, ce qui constitue une forme de sensibilisation par la pratique plutôt que par la formation : la consigne sur la visibilité des données personnelles (Q3.3), la restriction des liens de formulaire par équipe, et le document de passation opérationnelle (Q2.4), qui intègre déjà des réflexes de vigilance.</p>
-
-    <table class="bloc-orange"><tr><td>Ce que je propose pour formaliser cette sensibilisation, réaliste au regard du contexte d'une équipe restreinte : une fiche réflexe d'une page reprenant ces bonnes pratiques déjà appliquées — ne pas dupliquer une vue en retirant les filtres de masquage des données personnelles, ne pas partager un lien Airtable en accès complet, signaler une anomalie plutôt que la corriger seul dans l'urgence. Cette fiche serait déposée dans la Page Sécurité Notion et présentée en direct à Jérôme et François, avec un point de rappel lors d'une prochaine Sprint Review.</td></tr></table>
-  </div>
-  <div class="section-footer">PlayOff Amateurs — WePlay / Bootcamp Product Builder No-Code — École Cube</div>
-</div>
-
-<!-- Pied de page final -->
-<div style="background:#1B2A4A;color:rgba(255,255,255,0.5);padding:20px 60px;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:10px;text-align:center">
-  PlayOff Amateurs / WePlay — Dossier de soutenance — Sandrine Darrieu — RNCP 39108 — École Cube — Juin 2026
-</div>
-
-</div><!-- fin .page -->
 </body>
 </html>
