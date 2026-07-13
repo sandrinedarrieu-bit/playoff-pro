@@ -270,8 +270,8 @@ function connectAirtable(){
   TOKEN=document.getElementById('input-token').value.trim();
   BASE_ID=document.getElementById('input-base').value.trim()||'appk3ibcTEHYCJXtz';
   if(!TOKEN){showToast('Entre ton token Airtable');return}
-  sessionStorage.setItem('at_token',TOKEN);
-  sessionStorage.setItem('at_base',BASE_ID);
+  localStorage.setItem('at_token',TOKEN);
+  localStorage.setItem('at_base',BASE_ID);
   document.getElementById('setup-panel').style.display='none';
   loadCompetitions();
 }
@@ -617,8 +617,8 @@ function renderGlobalAlert(comps){
 
 // Init
 window.addEventListener('load',()=>{
-  TOKEN=sessionStorage.getItem('at_token')||'';
-  BASE_ID=sessionStorage.getItem('at_base')||'appk3ibcTEHYCJXtz';
+  TOKEN=localStorage.getItem('at_token')||'';
+  BASE_ID=localStorage.getItem('at_base')||'appk3ibcTEHYCJXtz';
   if(TOKEN){loadCompetitions()}
   else{document.getElementById('setup-panel').style.display='block';document.getElementById('comps-grid').innerHTML=''}
 });
