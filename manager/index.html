@@ -408,12 +408,12 @@ async function loadDocumentsLog(compId){
   const box=document.getElementById('detail-documents');
   box.innerHTML='<div class="loading">Chargement...</div>';
   try{
-    const formula=encodeURIComponent(`FIND("${compId}", ARRAYJOIN({Compétition_Lien}))`);
-    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_DOCS}?filterByFormula=${formula}&sort[0][field]=Date_creation&sort[0][direction]=desc`;
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_DOCS}?pageSize=100`;
     const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
     if(!r.ok)throw new Error(`Erreur ${r.status}`);
     const data=await r.json();
-    const docs=data.records||[];
+    const docs=(data.records||[]).filter(d=>(d.fields['Compétition_Lien']||[]).includes(compId));
+    docs.sort((a,b)=>new Date(b.fields['Date_creation']||0)-new Date(a.fields['Date_creation']||0));
     if(!docs.length){box.innerHTML='<div class="empty">Aucune fiche générée pour cette compétition.</div>';return}
     box.innerHTML=docs.map(d=>{
       const type=d.fields['Type']||'—';
@@ -431,12 +431,12 @@ async function loadEmailsLog(compId){
   const box=document.getElementById('detail-emails');
   box.innerHTML='<div class="loading">Chargement...</div>';
   try{
-    const formula=encodeURIComponent(`FIND("${compId}", ARRAYJOIN({Compétition_Lien}))`);
-    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_MAILS}?filterByFormula=${formula}&sort[0][field]=Date_envoi&sort[0][direction]=desc`;
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_MAILS}?pageSize=100`;
     const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
     if(!r.ok)throw new Error(`Erreur ${r.status}`);
     const data=await r.json();
-    const mails=data.records||[];
+    const mails=(data.records||[]).filter(m=>(m.fields['Compétition_Lien']||[]).includes(compId));
+    mails.sort((a,b)=>new Date(b.fields['Date_envoi']||0)-new Date(a.fields['Date_envoi']||0));
     if(!mails.length){box.innerHTML='<div class="empty">Aucun e-mail enregistré pour cette compétition.</div>';return}
     box.innerHTML=mails.map(m=>{
       const type=m.fields['Type']||'—';
