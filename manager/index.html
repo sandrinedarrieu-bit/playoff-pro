@@ -181,7 +181,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     <button class="filter-btn" onclick="setFilter('En cours',event)">En cours</button>
     <button class="filter-btn" onclick="setFilter('Terminée',event)">Terminées</button>
     <input class="search-input" type="text" placeholder="Rechercher..." id="search-input" oninput="applyFilters()">
-    <button class="btn-make" style="margin-left:auto" onclick="openNewCompetition()">+ Nouvelle compétition</button>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-make" onclick="openNewCompetition()">+ Nouvelle compétition</button>
   </div>
 
   <div id="comps-grid" class="comps-grid"><div class="loading">Chargement...</div></div>
@@ -283,12 +286,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     </div>
     <div class="modal-body">
       <div class="modal-field">
-        <label>Nom de l'équipe</label>
-        <input type="text" id="team-nom" placeholder="Nom de l'équipe" />
+        <label>Club <span style="color:#E8511A">*</span></label>
+        <select id="team-club-select" onchange="onTeamClubChange()"><option value="">— Choisir un club —</option></select>
       </div>
-      <div class="modal-field">
-        <label>Club (optionnel)</label>
-        <select id="team-club-select"><option value="">— Aucun club —</option></select>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="team-mode-btn-new" onclick="setAddTeamMode('new')">Nouvelle équipe</button>
+        <button class="mode-btn" id="team-mode-btn-existing" onclick="setAddTeamMode('existing')">Équipe existante</button>
+      </div>
+      <div id="add-team-new-section">
+        <div class="modal-field">
+          <label>Nom de l'équipe</label>
+          <input type="text" id="team-nom" placeholder="Nom de l'équipe" />
+        </div>
+      </div>
+      <div id="add-team-existing-section" style="display:none">
+        <div class="modal-field">
+          <label>Équipe du club (sans compétition)</label>
+          <select id="existing-team-select"><option value="">Choisis d'abord un club</option></select>
+        </div>
       </div>
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closeAddTeamModal()">Annuler</button>
@@ -312,8 +327,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       </div>
       <div class="modal-field">
         <label>Discipline</label>
-        <input type="text" id="comp-discipline" list="comp-discipline-list" placeholder="ex : ⚽Football à 5" />
-        <datalist id="comp-discipline-list"></datalist>
+        <select id="comp-discipline"><option value="">Chargement...</option></select>
       </div>
       <div class="modal-field">
         <label>Ville / zone géographique</label>
@@ -338,7 +352,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 
 <script>
 let TOKEN='',BASE_ID='appk3ibcTEHYCJXtz',allComps=[],currentFilter='tous',selectedComp=null,addPlayerEquipeId=null,unsubEquipeId=null,addPlayerMode='new';
-const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9',TABLE_CLUB='tbl3FI7FOOUycW7ej',TABLE_DOCS='Journal_Documents',TABLE_MAILS='Journal_Emails';
+const TABLE_COMP='tblCndP7xpOW1VpOm',TABLE_EQ='tblIFbvixtcOMHnYY',TABLE_CONTACT='tblUg2ztkc9rhBYw9',TABLE_CLUB='tbl3FI7FOOUycW7ej',TABLE_DOCS='Journal_Documents',TABLE_MAILS='Journal_Emails',TABLE_DISCIPLINES='tblHqGuP78FpJFfd7';
 const sClass={'Brouillon':'s-brouillon','Ouverte aux inscriptions':'s-ouvert','Inscriptions clôturées':'s-cloture','En cours':'s-en-cours','Terminée':'s-termine'};
 
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;setTimeout(()=>t.className='toast',3000)}
@@ -606,13 +620,46 @@ function closePlayerModal(){
   document.getElementById('player-modal').classList.remove('open');
 }
 
+let addTeamMode='new';
+
 function openAddTeam(){
   if(!selectedComp){showToast('Erreur : compétition non sélectionnée');return}
   document.getElementById('modal-team-comp-nom').textContent=selectedComp.nom;
   document.getElementById('team-nom').value='';
+  setAddTeamMode('new');
   document.getElementById('team-modal').classList.add('open');
   loadClubsForTeamModal();
-  document.getElementById('team-nom').focus();
+}
+
+function setAddTeamMode(mode){
+  addTeamMode=mode;
+  document.getElementById('team-mode-btn-new').classList.toggle('active',mode==='new');
+  document.getElementById('team-mode-btn-existing').classList.toggle('active',mode==='existing');
+  document.getElementById('add-team-new-section').style.display=mode==='new'?'block':'none';
+  document.getElementById('add-team-existing-section').style.display=mode==='existing'?'block':'none';
+  document.getElementById('btn-submit-team').textContent=mode==='new'?'Ajouter':'Rattacher à la compétition';
+  if(mode==='existing')loadExistingTeamsForClub();
+}
+
+function onTeamClubChange(){
+  if(addTeamMode==='existing')loadExistingTeamsForClub();
+}
+
+async function loadExistingTeamsForClub(){
+  const select=document.getElementById('existing-team-select');
+  const clubId=document.getElementById('team-club-select').value;
+  if(!clubId){select.innerHTML='<option value="">Choisis d\'abord un club</option>';return}
+  select.innerHTML='<option value="">Chargement...</option>';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_EQ}?pageSize=100`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    const data=await r.json();
+    const equipes=(data.records||[]).filter(e=>(e.fields['Club_Lien']||[]).includes(clubId) && (e.fields['Compétition_Lien']||[]).length===0);
+    if(!equipes.length){select.innerHTML='<option value="">Aucune équipe disponible pour ce club</option>';return}
+    select.innerHTML=equipes.map(e=>`<option value="${e.id}">${e.fields['Equipe']||'(sans nom)'}</option>`).join('');
+  }catch(err){
+    select.innerHTML='<option value="">Erreur de chargement</option>';
+  }
 }
 
 function closeAddTeamModal(){
@@ -627,9 +674,9 @@ async function loadClubsForTeamModal(){
     const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
     const data=await r.json();
     const clubs=data.records||[];
-    select.innerHTML='<option value="">— Aucun club —</option>'+clubs.map(c=>`<option value="${c.id}">${c.fields['NomClub']||'(sans nom)'}</option>`).join('');
+    select.innerHTML='<option value="">— Choisir un club —</option>'+clubs.map(c=>`<option value="${c.id}">${c.fields['NomClub']||'(sans nom)'}</option>`).join('');
   }catch(err){
-    select.innerHTML='<option value="">— Aucun club —</option>';
+    select.innerHTML='<option value="">— Choisir un club —</option>';
   }
 }
 
@@ -655,13 +702,26 @@ function closeNewCompetitionModal(){
 }
 
 function populateCompDatalists(){
-  const disciplines=new Set(),villes=new Set();
+  const villes=new Set();
   (allComps||[]).forEach(c=>{
-    if(c.discipline)disciplines.add(c.discipline);
     if(c.ville)villes.add(c.ville);
   });
-  document.getElementById('comp-discipline-list').innerHTML=[...disciplines].map(d=>`<option value="${d}">`).join('');
   document.getElementById('comp-ville-list').innerHTML=[...villes].map(v=>`<option value="${v}">`).join('');
+  loadDisciplinesSelect();
+}
+
+async function loadDisciplinesSelect(){
+  const select=document.getElementById('comp-discipline');
+  select.innerHTML='<option value="">Chargement...</option>';
+  try{
+    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_DISCIPLINES}`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${TOKEN}`}});
+    const data=await r.json();
+    const sports=(data.records||[]).map(s=>s.fields['Disciplines']).filter(Boolean).sort();
+    select.innerHTML='<option value="">— Choisir un sport —</option>'+sports.map(s=>`<option value="${s}">${s}</option>`).join('');
+  }catch(err){
+    select.innerHTML='<option value="">— Choisir un sport —</option>';
+  }
 }
 
 async function submitNewCompetition(){
@@ -731,33 +791,60 @@ async function triggerCloture(){
 }
 
 async function submitTeam(){
-  const nom=document.getElementById('team-nom').value.trim();
-  if(!nom){showToast('Le nom de l\'équipe est obligatoire');return}
-  if(!selectedComp){showToast('Erreur : compétition non sélectionnée');return}
   const clubId=document.getElementById('team-club-select').value;
+  if(!clubId){showToast('Le club est obligatoire');return}
+  if(!selectedComp){showToast('Erreur : compétition non sélectionnée');return}
   const btn=document.getElementById('btn-submit-team');
-  btn.disabled=true;btn.textContent='Ajout...';
-  try{
-    const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_EQ}`;
-    const fields={'Equipe':nom,'Compétition_Lien':[selectedComp.id]};
-    if(clubId)fields['Club_Lien']=[clubId];
-    const body={fields};
-    const r=await fetch(url,{
-      method:'POST',
-      headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
-    if(!r.ok){
-      const errData=await r.json().catch(()=>({}));
-      throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+  btn.disabled=true;
+
+  if(addTeamMode==='new'){
+    const nom=document.getElementById('team-nom').value.trim();
+    if(!nom){showToast('Le nom de l\'équipe est obligatoire');btn.disabled=false;return}
+    btn.textContent='Ajout...';
+    try{
+      const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_EQ}`;
+      const fields={'Equipe':nom,'Compétition_Lien':[selectedComp.id],'Club_Lien':[clubId]};
+      const r=await fetch(url,{
+        method:'POST',
+        headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+        body:JSON.stringify({fields})
+      });
+      if(!r.ok){
+        const errData=await r.json().catch(()=>({}));
+        throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+      }
+      showToast(`✓ Équipe "${nom}" ajoutée`,'success');
+      closeAddTeamModal();
+      await refreshAfterTeamChange();
+    }catch(err){
+      showToast(`Erreur : ${err.message}`);
+    }finally{
+      btn.disabled=false;btn.textContent='Ajouter';
     }
-    showToast(`✓ Équipe "${nom}" ajoutée`,'success');
-    closeAddTeamModal();
-    await refreshAfterTeamChange();
-  }catch(err){
-    showToast(`Erreur : ${err.message}`);
-  }finally{
-    btn.disabled=false;btn.textContent='Ajouter';
+  }else{
+    const teamId=document.getElementById('existing-team-select').value;
+    if(!teamId){showToast('Choisis une équipe existante');btn.disabled=false;return}
+    btn.textContent='Rattachement...';
+    try{
+      const url=`https://api.airtable.com/v0/${BASE_ID}/${TABLE_EQ}`;
+      const body={records:[{id:teamId,fields:{'Compétition_Lien':[selectedComp.id]}}]};
+      const r=await fetch(url,{
+        method:'PATCH',
+        headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+      if(!r.ok){
+        const errData=await r.json().catch(()=>({}));
+        throw new Error(errData?.error?.message||`Erreur ${r.status}`);
+      }
+      showToast('✓ Équipe rattachée à la compétition','success');
+      closeAddTeamModal();
+      await refreshAfterTeamChange();
+    }catch(err){
+      showToast(`Erreur : ${err.message}`);
+    }finally{
+      btn.disabled=false;btn.textContent='Rattacher à la compétition';
+    }
   }
 }
 
